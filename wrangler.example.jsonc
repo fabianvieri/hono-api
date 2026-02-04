@@ -1,0 +1,12 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "hono-api",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-02-03",
+	"compatibility_flags": ["nodejs_compat"],
+	"d1_databases": [],
+	"observability": {
+		"enabled": true,
+		"head_sampling_rate": 1,
+	},
+}
