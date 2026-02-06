@@ -4,7 +4,14 @@
 	"main": "src/index.ts",
 	"compatibility_date": "2026-02-03",
 	"compatibility_flags": ["nodejs_compat"],
-	"d1_databases": [],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "hono-api-db",
+			"database_id": "d39689c6-0ac0-4e78-b2b5-952a32f34267",
+			"migrations_dir": "drizzle",
+		},
+	],
 	"observability": {
 		"enabled": true,
 		"head_sampling_rate": 1,

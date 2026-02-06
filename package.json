@@ -6,14 +6,15 @@
 		"deploy": "wrangler deploy --minify",
 		"cf-typegen": "wrangler typesc",
 		"db:generate": "drizzle-kit generate",
-		"db:apply": "wrangler d1 migrations apply hono-api-db --remote",
-		"db:push": "drizzle-kit push"
+		"db:push:local": "wrangler d1 migrations apply hono-api-db",
+		"db:push:remote": "wrangler d1 migrations apply hono-api-db --remote"
 	},
 	"dependencies": {
 		"@hono/swagger-ui": "^0.5.3",
 		"@hono/zod-openapi": "^1.2.1",
 		"@libsql/client": "^0.17.0",
 		"drizzle-orm": "^0.45.1",
+		"drizzle-zod": "^0.8.3",
 		"hono": "^4.11.7"
 	},
 	"devDependencies": {

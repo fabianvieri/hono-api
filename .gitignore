@@ -32,8 +32,5 @@ lerna-debug.log*
 # misc
 .DS_Store
 
-# wrangler
-wrangler.jsonc
-
 # drizzle
 drizzle
