@@ -1,5 +1,6 @@
 import { DrizzleD1Database } from 'drizzle-orm/d1';
 import { budgets } from '../../schemas/budgets';
+import { eq } from 'drizzle-orm';
 
 export class BudgetService {
 	private static instance: BudgetService;
@@ -11,8 +12,14 @@ export class BudgetService {
 		return this.instance;
 	}
 
-	public async getData() {
-		const result = await this.db.select().from(budgets);
+	public async getBudgetsByUserId(userId: number) {
+		const result = await this.db
+			.select()
+			.from(budgets)
+			.where(eq(budgets.userId, userId));
+
+		console.log(result);
+
 		return result;
 	}
 }
