@@ -6,12 +6,7 @@ export const UserBudgetsOpenApi = createRoute({
 	tags: ['Budgets'],
 	summary: 'Get User Budgets',
 	security: [{ Bearer: [] }],
-	path: '/{userId}',
-	request: {
-		params: z.object({
-			userId: z.coerce.number().openapi({ example: 1 }),
-		}),
-	},
+	path: '/',
 	responses: {
 		200: {
 			description: 'Success',

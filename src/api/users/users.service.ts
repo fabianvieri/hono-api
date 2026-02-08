@@ -42,4 +42,60 @@ export class UserService {
 		const token = await sign({ id: user.id }, this.jwtSecret);
 		return { token };
 	}
+
+	public async signUp(data: {
+		email: string;
+		password: string;
+		username: string;
+	}) {
+		const { email, password, username } = data;
+
+		const user = await this.db
+			.select()
+			.from(users)
+			.where(eq(users.email, email))
+			.get();
+
+		if (user) {
+			throw new Error('Email already exists');
+		}
+
+		const hashedPassword = await md5(password);
+
+		if (!hashedPassword) {
+			throw new Error('Error hashing user password');
+		}
+
+		const newUser = await this.db
+			.insert(users)
+			.values({ email, password: hashedPassword, username })
+			.returning({ id: users.id })
+			.get();
+
+		return newUser.id;
+	}
+
+	public async profile(data: { id: number }) {
+		const { id } = data;
+
+		console.log('id', id);
+
+		const user = await this.db
+			.select({
+				id: users.id,
+				email: users.email,
+				username: users.username,
+				createdAt: users.createdAt,
+				updatedAt: users.updatedAt,
+			})
+			.from(users)
+			.where(eq(users.id, id))
+			.get();
+
+		if (!user) {
+			throw new Error('User not found');
+		}
+
+		return user;
+	}
 }

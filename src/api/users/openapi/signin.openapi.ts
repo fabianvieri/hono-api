@@ -1,11 +1,11 @@
 import { createRoute, z } from '@hono/zod-openapi';
 import { UserSignInSchema } from '../../../schemas/users';
 
-export const SignInOpenApi = createRoute({
+export const SigninOpenApi = createRoute({
 	method: 'post',
 	tags: ['Users'],
-	path: '/sign-in',
 	summary: 'Signin user',
+	path: '/sign-in',
 	request: {
 		body: {
 			content: {

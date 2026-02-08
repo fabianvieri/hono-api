@@ -21,3 +21,8 @@ export const UserSignInSchema = UserInsertSchema.pick({
 	email: true,
 	password: true,
 });
+export const UserSignUpSchema = UserInsertSchema.pick({
+	email: true,
+	username: true,
+	password: true,
+});

@@ -15,11 +15,11 @@ routes.use(async (c, next) => {
 	await next();
 });
 
-// routes.use(UserBudgetsOpenApi.getRoutingPath(), auth);
+routes.use(UserBudgetsOpenApi.getRoutingPath(), auth);
 routes.openapi(UserBudgetsOpenApi, async (c) => {
 	try {
 		const service = c.get('budgetService');
-		const { userId } = c.req.valid('param');
+		const userId = c.var.jwtPayload.id;
 		const budgets = await service.getBudgetsByUserId(userId);
 		return c.json(budgets, 200);
 	} catch (error) {
