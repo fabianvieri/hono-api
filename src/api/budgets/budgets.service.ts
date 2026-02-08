@@ -13,13 +13,9 @@ export class BudgetService {
 	}
 
 	public async getBudgetsByUserId(userId: number) {
-		const result = await this.db
+		return await this.db
 			.select()
 			.from(budgets)
 			.where(eq(budgets.userId, userId));
-
-		console.log(result);
-
-		return result;
 	}
 }

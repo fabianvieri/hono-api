@@ -1,7 +1,7 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { Bindings, Variables } from '../../core/configs/worker';
 import { BudgetService } from './budgets.service';
-import { UserBudgetsOpenApi } from './budgets.openapi';
+import { UserBudgetsOpenApi } from './openapi/user-budgets.openapi';
 import { auth } from '../../core/middlewares/auth';
 
 const routes = new OpenAPIHono<{
@@ -17,11 +17,14 @@ routes.use(async (c, next) => {
 
 // routes.use(UserBudgetsOpenApi.getRoutingPath(), auth);
 routes.openapi(UserBudgetsOpenApi, async (c) => {
-	const { userId } = c.req.valid('param');
-	const service = c.get('budgetService');
-	const budgets = await service.getBudgetsByUserId(userId);
-
-	return c.json(budgets, 200);
+	try {
+		const service = c.get('budgetService');
+		const { userId } = c.req.valid('param');
+		const budgets = await service.getBudgetsByUserId(userId);
+		return c.json(budgets, 200);
+	} catch (error) {
+		return c.json({ message: 'err' }, 401);
+	}
 });
 
 export { routes as BudgetRoutes };

@@ -1,7 +1,7 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { Bindings, Variables } from '../../core/configs/worker';
 import { UserService } from './users.service';
-import { SignInOpenApi } from './users.openapi';
+import { SignInOpenApi } from './openapi/signin.openapi';
 
 const routes = new OpenAPIHono<{
 	Bindings: Bindings;
@@ -15,9 +15,9 @@ routes.use(async (c, next) => {
 });
 
 routes.openapi(SignInOpenApi, async (c) => {
-	const service = c.get('userService');
-	const { email, password } = c.req.valid('json');
 	try {
+		const service = c.get('userService');
+		const { email, password } = c.req.valid('json');
 		const { token } = await service.signIn({ email, password });
 		return c.json({ token }, 200);
 	} catch (error) {

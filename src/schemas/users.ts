@@ -1,16 +1,17 @@
-import { sql } from 'drizzle-orm';
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { index, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { baseColumns } from './base';
 
-export const users = sqliteTable('users', {
-	id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
-	username: text('username').notNull().unique(),
-	email: text('email').notNull().unique(),
-	password: text('password').notNull(),
-	createdAt: text('created_at')
-		.notNull()
-		.default(sql`(CURRENT_TIMESTAMP)`),
-});
+export const users = sqliteTable(
+	'users',
+	{
+		...baseColumns,
+		password: text('password').notNull(),
+		email: text('email').notNull().unique(),
+		username: text('username').notNull().unique(),
+	},
+	(table) => [index('email_idx').on(table.email)],
+);
 
 export const UserSelectSchema = createSelectSchema(users);
 export const UserInsertSchema = createInsertSchema(users);

@@ -26,7 +26,7 @@ export class UserService {
 		const hashedPassword = await md5(password);
 
 		if (!hashedPassword) {
-			throw new Error('Error signin users');
+			throw new Error('Error hashing user password');
 		}
 
 		const user = await this.db

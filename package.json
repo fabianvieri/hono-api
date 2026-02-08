@@ -6,6 +6,7 @@
 		"deploy": "wrangler deploy --minify",
 		"cf-typegen": "wrangler typesc",
 		"db:generate": "drizzle-kit generate",
+		"db:seed": "wrangler d1 execute hono-api-db --file=seed.sql",
 		"db:push:local": "wrangler d1 migrations apply hono-api-db",
 		"db:push:remote": "wrangler d1 migrations apply hono-api-db --remote"
 	},

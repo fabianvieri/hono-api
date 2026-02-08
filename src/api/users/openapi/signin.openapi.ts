@@ -1,11 +1,11 @@
 import { createRoute, z } from '@hono/zod-openapi';
-import { UserSignInSchema } from '../../schemas/users';
+import { UserSignInSchema } from '../../../schemas/users';
 
 export const SignInOpenApi = createRoute({
 	method: 'post',
 	tags: ['Users'],
 	path: '/sign-in',
-	summary: 'Sign In User',
+	summary: 'Signin user',
 	request: {
 		body: {
 			content: {
@@ -17,7 +17,7 @@ export const SignInOpenApi = createRoute({
 	},
 	responses: {
 		200: {
-			description: 'Successful sign-in',
+			description: 'Signin successful',
 			content: {
 				'application/json': { schema: z.object({ token: z.string() }) },
 			},
