@@ -9,7 +9,7 @@ export const budgets = sqliteTable(
 		...baseColumns,
 		name: text('name').notNull(),
 		amount: integer('amount').notNull(),
-		userId: integer('user_id', { mode: 'number' })
+		userId: text('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 	},
