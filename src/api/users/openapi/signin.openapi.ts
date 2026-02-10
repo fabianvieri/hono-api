@@ -19,11 +19,13 @@ export const SigninOpenApi = createRoute({
 		200: {
 			description: 'Signin successful',
 			content: {
-				'application/json': { schema: z.object({ token: z.string() }) },
+				'application/json': {
+					schema: z.object({ exp: z.number() }),
+				},
 			},
 		},
-		400: {
-			description: 'Bad Request',
+		401: {
+			description: 'Unauthorized',
 			content: {
 				'application/json': {
 					schema: z.object({

@@ -19,7 +19,7 @@ export const SignupOpenAPI = createRoute({
 			content: {
 				'application/json': {
 					schema: z.object({
-						id: z.coerce.number(),
+						id: z.string(),
 					}),
 				},
 			},

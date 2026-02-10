@@ -1,9 +1,11 @@
 import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono } from '@hono/zod-openapi';
+import { cors } from 'hono/cors';
 import { Bindings, Variables } from './core/configs/worker';
 import { DrizzleDB } from './core/db/drizzle';
 import { BudgetRoutes } from './api/budgets/budgets.route';
 import { UserRoutes } from './api/users/users.route';
+import { secureHeaders } from 'hono/secure-headers';
 
 const app = new OpenAPIHono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -20,6 +22,15 @@ app.doc31('/openapi', {
 
 app.get('/', (c) => c.text(`Welcome to this server`));
 app.get('/swagger', swaggerUI({ url: '/openapi' }));
+
+app.use(
+	cors({
+		origin: '*',
+		credentials: true,
+	}),
+);
+
+app.use(secureHeaders());
 
 app.use(async (ctx, next) => {
 	ctx.set('db', DrizzleDB.getInstance(ctx.env.DB));

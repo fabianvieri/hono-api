@@ -12,7 +12,7 @@ export class BudgetService {
 		return this.instance;
 	}
 
-	public async getBudgetsByUserId(userId: number) {
+	public async getBudgetsByUserId(userId: string) {
 		return await this.db
 			.select()
 			.from(budgets)

@@ -5,6 +5,7 @@ import { SigninOpenApi } from './openapi/signin.openapi';
 import { SignupOpenAPI } from './openapi/singup.openapi';
 import { ProfileOpenAPI } from './openapi/profile.openapi';
 import { auth } from '../../core/middlewares/auth';
+import { setCookie } from 'hono/cookie';
 
 const routes = new OpenAPIHono<{
 	Bindings: Bindings;
@@ -12,7 +13,15 @@ const routes = new OpenAPIHono<{
 }>();
 
 routes.use(async (c, next) => {
-	const userService = UserService.getInstance(c.var.db, c.env.JWT_SECRET);
+	const ttlSeconds = Number(c.env.JWT_TTL_SECONDS);
+	if (!Number.isFinite(ttlSeconds) || ttlSeconds <= 0) {
+		throw new Error('Invalid JWT_TTL_SECONDS');
+	}
+	const userService = UserService.getInstance(
+		c.var.db,
+		c.env.JWT_SECRET,
+		ttlSeconds,
+	);
 	c.set('userService', userService);
 	await next();
 });
@@ -21,10 +30,17 @@ routes.openapi(SigninOpenApi, async (c) => {
 	try {
 		const service = c.get('userService');
 		const { email, password } = c.req.valid('json');
-		const { token } = await service.signIn({ email, password });
-		return c.json({ token }, 200);
+		const { token, exp } = await service.signIn({ email, password });
+		setCookie(c, 'auth_token', token, {
+			httpOnly: true,
+			secure: true,
+			sameSite: 'None',
+			path: '/',
+			maxAge: Number(c.env.JWT_TTL_SECONDS),
+		});
+		return c.json({ exp }, 200);
 	} catch (error) {
-		return c.json({ message: 'Invalid email or password' }, 400);
+		return c.json({ message: 'Invalid email or password' }, 401);
 	}
 });
 
