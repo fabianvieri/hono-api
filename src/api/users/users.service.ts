@@ -1,9 +1,10 @@
 import { DrizzleD1Database } from 'drizzle-orm/d1';
-import { users } from '../../schemas/users';
+import { users, UserSignInSchema, UserSignUpSchema } from '../../schemas/users';
 import { eq } from 'drizzle-orm';
 import { sign } from 'hono/jwt';
 import { hashPassword, verifyPassword } from './utils/password';
 import { AppError } from '../../core/errors/app-error';
+import { z } from '@hono/zod-openapi';
 
 export class UserService {
 	private static instance: UserService;
@@ -24,7 +25,7 @@ export class UserService {
 		return this.instance;
 	}
 
-	public async signIn(data: { email: string; password: string }) {
+	public async signIn(data: z.infer<typeof UserSignInSchema>) {
 		const { email, password } = data;
 
 		const user = await this.db
@@ -49,11 +50,7 @@ export class UserService {
 		return { token, exp };
 	}
 
-	public async signUp(data: {
-		email: string;
-		password: string;
-		username: string;
-	}) {
+	public async signUp(data: z.infer<typeof UserSignUpSchema>) {
 		const { email, password, username } = data;
 
 		const user = await this.db
@@ -77,9 +74,7 @@ export class UserService {
 		return newUser.id;
 	}
 
-	public async profile(data: { id: string }) {
-		const { id } = data;
-
+	public async profile(id: string) {
 		const user = await this.db
 			.select({
 				id: users.id,

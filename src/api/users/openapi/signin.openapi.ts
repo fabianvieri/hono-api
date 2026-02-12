@@ -9,9 +9,7 @@ export const SigninOpenApi = createRoute({
 	request: {
 		body: {
 			content: {
-				'application/json': {
-					schema: UserSignInSchema,
-				},
+				'application/json': { schema: UserSignInSchema },
 			},
 		},
 	},
@@ -35,9 +33,7 @@ export const SigninOpenApi = createRoute({
 					schema: z.object({
 						ok: z.boolean(),
 						data: z.null(),
-						message: z
-							.string()
-							.openapi({ examples: ['Invalid credentials'] }),
+						message: z.string().openapi({ examples: ['Invalid credentials'] }),
 					}),
 				},
 			},

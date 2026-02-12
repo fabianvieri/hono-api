@@ -28,8 +28,8 @@ routes.use(async (c, next) => {
 
 routes.openapi(SigninOpenApi, async (c) => {
 	const service = c.get('userService');
-	const { email, password } = c.req.valid('json');
-	const { token, exp } = await service.signIn({ email, password });
+	const body = c.req.valid('json');
+	const { token, exp } = await service.signIn(body);
 	setCookie(c, 'auth_token', token, {
 		httpOnly: true,
 		secure: true,
@@ -42,8 +42,8 @@ routes.openapi(SigninOpenApi, async (c) => {
 
 routes.openapi(SignupOpenAPI, async (c) => {
 	const service = c.get('userService');
-	const { email, password, username } = c.req.valid('json');
-	const id = await service.signUp({ email, password, username });
+	const body = c.req.valid('json');
+	const id = await service.signUp(body);
 	return c.json({ ok: true, data: { id }, message: null }, 200);
 });
 
@@ -51,7 +51,7 @@ routes.use(ProfileOpenAPI.getRoutingPath(), auth);
 routes.openapi(ProfileOpenAPI, async (c) => {
 	const service = c.get('userService');
 	const userId = c.var.jwtPayload.id;
-	const userProfile = await service.profile({ id: userId });
+	const userProfile = await service.profile(userId);
 	return c.json({ ok: true, data: userProfile, message: null }, 200);
 });
 

@@ -27,9 +27,9 @@ routes.openapi(UserBudgetsOpenApi, async (c) => {
 routes.use(CreateBudgetOpenApi.getRoutingPath(), auth);
 routes.openapi(CreateBudgetOpenApi, async (c) => {
 	const service = c.get('budgetService');
-	const data = c.req.valid('json');
+	const body = c.req.valid('json');
 	const userId = c.var.jwtPayload.id;
-	const budgets = await service.createBudget(data, userId);
+	const budgets = await service.createBudget(body, userId);
 	return c.json({ ok: true, data: budgets, message: null }, 200);
 });
 
