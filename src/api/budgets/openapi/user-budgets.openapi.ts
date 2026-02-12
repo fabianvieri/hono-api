@@ -4,7 +4,7 @@ import { BudgetSelectSchema } from '../../../schemas/budgets';
 export const UserBudgetsOpenApi = createRoute({
 	method: 'get',
 	tags: ['Budgets'],
-	summary: 'Get User Budgets',
+	summary: 'Get user budgets',
 	security: [{ Bearer: [] }],
 	path: '/',
 	responses: {
@@ -36,34 +36,6 @@ export const UserBudgetsOpenApi = createRoute({
 								},
 							],
 						}),
-				},
-			},
-		},
-		404: {
-			description: 'Not Found',
-			content: {
-				'application/json': {
-					schema: z.object({
-						ok: z.boolean(),
-						data: z.null(),
-						message: z
-							.string()
-							.openapi({ examples: ['Budgets not found'] }),
-					}),
-				},
-			},
-		},
-		500: {
-			description: 'Internal server error',
-			content: {
-				'application/json': {
-					schema: z.object({
-						ok: z.boolean(),
-						data: z.null(),
-						message: z
-							.string()
-							.openapi({ examples: ['Internal server error'] }),
-					}),
 				},
 			},
 		},

@@ -1,7 +1,8 @@
 import { DrizzleD1Database } from 'drizzle-orm/d1';
-import { budgets } from '../../schemas/budgets';
+import { BudgetInsertSchema, budgets } from '../../schemas/budgets';
 import { eq } from 'drizzle-orm';
 import { AppError } from '../../core/errors/app-error';
+import { z } from '@hono/zod-openapi';
 
 export class BudgetService {
 	private static instance: BudgetService;
@@ -13,14 +14,25 @@ export class BudgetService {
 		return this.instance;
 	}
 
+	public async createBudget(
+		budget: z.infer<typeof BudgetInsertSchema>,
+		userId: string,
+	) {
+		const output = await this.db
+			.insert(budgets)
+			.values({ ...budget, userId })
+			.returning()
+			.get();
+
+		return output;
+	}
+
 	public async getBudgetsByUserId(userId: string) {
-		const rows = await this.db
+		const output = await this.db
 			.select()
 			.from(budgets)
 			.where(eq(budgets.userId, userId));
-		if (rows.length === 0) {
-			throw new AppError(404, 'BUDGETS_NOT_FOUND', 'Budgets not found');
-		}
-		return rows;
+
+		return output;
 	}
 }
