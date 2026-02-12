@@ -17,14 +17,10 @@ routes.use(async (c, next) => {
 
 routes.use(UserBudgetsOpenApi.getRoutingPath(), auth);
 routes.openapi(UserBudgetsOpenApi, async (c) => {
-	try {
-		const service = c.get('budgetService');
-		const userId = c.var.jwtPayload.id;
-		const budgets = await service.getBudgetsByUserId(userId);
-		return c.json(budgets, 200);
-	} catch (error) {
-		return c.json({ message: 'err' }, 401);
-	}
+	const service = c.get('budgetService');
+	const userId = c.var.jwtPayload.id;
+	const budgets = await service.getBudgetsByUserId(userId);
+	return c.json({ ok: true, data: budgets, message: null }, 200);
 });
 
 export { routes as BudgetRoutes };

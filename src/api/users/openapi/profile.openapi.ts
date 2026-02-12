@@ -12,36 +12,38 @@ export const ProfileOpenAPI = createRoute({
 			description: 'Success',
 			content: {
 				'application/json': {
-					schema: UserPublicSchema.openapi({
-						examples: [
-							{
-								id: 3,
-								email: 'test@gmail.com',
-								username: 'test',
-								createdAt: '2026-02-08 12:19:41',
-								updatedAt: '2026-02-08 12:19:41',
-							},
-						],
-					}),
+					schema: z
+						.object({
+							ok: z.boolean(),
+							data: UserPublicSchema,
+							message: z.null(),
+						})
+						.openapi({
+							examples: [
+								{
+									ok: true,
+									data: {
+										id: 3,
+										email: 'test@gmail.com',
+										username: 'test',
+										createdAt: '2026-02-08 12:19:41',
+										updatedAt: '2026-02-08 12:19:41',
+									},
+									message: null,
+								},
+							],
+						}),
 				},
 			},
 		},
-		400: {
+		404: {
 			description: 'Not Found',
 			content: {
 				'application/json': {
 					schema: z.object({
+						ok: z.boolean(),
+						data: z.null(),
 						message: z.string().openapi({ examples: ['User not found'] }),
-					}),
-				},
-			},
-		},
-		401: {
-			description: 'Unauthorized',
-			content: {
-				'application/json': {
-					schema: z.object({
-						message: z.string().openapi({ examples: ['Unauthorized'] }),
 					}),
 				},
 			},

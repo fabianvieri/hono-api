@@ -3,6 +3,7 @@ import { users } from '../../schemas/users';
 import { eq } from 'drizzle-orm';
 import { sign } from 'hono/jwt';
 import { hashPassword, verifyPassword } from './utils/password';
+import { AppError } from '../../core/errors/app-error';
 
 export class UserService {
 	private static instance: UserService;
@@ -32,14 +33,19 @@ export class UserService {
 			.where(eq(users.email, email))
 			.get();
 
-		if (!user) throw new Error('Invalid credentials');
+		if (!user) {
+			throw new AppError(401, 'INVALID_CREDENTIALS', 'Invalid credentials');
+		}
 
-		const isValid = await verifyPassword(password, user.password);
-		if (!isValid) throw new Error('Invalid credentials');
+		const isValid = verifyPassword(password, user.password);
+		if (!isValid) {
+			throw new AppError(401, 'INVALID_CREDENTIALS', 'Invalid credentials');
+		}
 
 		const now = Math.floor(Date.now() / 1000);
 		const exp = now + this.jwtTtlSeconds;
 		const token = await sign({ id: user.id, iat: now, exp }, this.jwtSecret);
+
 		return { token, exp };
 	}
 
@@ -57,10 +63,10 @@ export class UserService {
 			.get();
 
 		if (user) {
-			throw new Error('Email already exists');
+			throw new AppError(409, 'EMAIL_EXISTS', 'Email already exists');
 		}
 
-		const hashedPassword = await hashPassword(password);
+		const hashedPassword = hashPassword(password);
 
 		const newUser = await this.db
 			.insert(users)
@@ -87,7 +93,7 @@ export class UserService {
 			.get();
 
 		if (!user) {
-			throw new Error('User not found');
+			throw new AppError(404, 'USER_NOT_FOUND', 'User not found');
 		}
 
 		return user;

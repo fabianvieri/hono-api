@@ -1,11 +1,13 @@
 import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { cors } from 'hono/cors';
+import { logger } from 'hono/logger';
+import { secureHeaders } from 'hono/secure-headers';
 import { Bindings, Variables } from './core/configs/worker';
 import { DrizzleDB } from './core/db/drizzle';
 import { BudgetRoutes } from './api/budgets/budgets.route';
 import { UserRoutes } from './api/users/users.route';
-import { secureHeaders } from 'hono/secure-headers';
+import { AppError } from './core/errors/app-error';
 
 const app = new OpenAPIHono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -20,6 +22,19 @@ app.doc31('/openapi', {
 	openapi: '3.1.0',
 });
 
+app.onError((error, c) => {
+	if (error instanceof AppError) {
+		return c.json(
+			{ ok: false, data: null, message: error.message },
+			error.status,
+		);
+	}
+	return c.json(
+		{ ok: false, data: null, message: 'Internal server error' },
+		500,
+	);
+});
+
 app.get('/', (c) => c.text(`Welcome to this server`));
 app.get('/swagger', swaggerUI({ url: '/openapi' }));
 
@@ -31,6 +46,7 @@ app.use(
 );
 
 app.use(secureHeaders());
+app.use(logger());
 
 app.use(async (ctx, next) => {
 	ctx.set('db', DrizzleDB.getInstance(ctx.env.DB));

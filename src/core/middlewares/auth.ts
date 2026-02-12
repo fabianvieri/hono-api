@@ -12,14 +12,14 @@ export const auth = async (
 	const token = cookieToken;
 
 	if (!token) {
-		return ctx.json({ message: 'Unauthorized' }, 401);
+		return ctx.json({ ok: false, data: null, message: 'Unauthorized' }, 401);
 	}
 
 	try {
 		await verify(token, ctx.env.JWT_SECRET, 'HS256');
 	} catch {
 		ctx.header('WWW-Authenticate', 'Bearer');
-		return ctx.json({ message: 'Unauthorized' }, 401);
+		return ctx.json({ ok: false, data: null, message: 'Unauthorized' }, 401);
 	}
 
 	const { payload } = decode(token);
@@ -31,12 +31,12 @@ export const auth = async (
 
 	const parsedPayload = payloadSchema.safeParse(payload);
 	if (!parsedPayload.success) {
-		return ctx.json({ message: 'Unauthorized' }, 401);
+		return ctx.json({ ok: false, data: null, message: 'Unauthorized' }, 401);
 	}
 
 	const now = Math.floor(Date.now() / 1000);
 	if (parsedPayload.data.exp <= now) {
-		return ctx.json({ message: 'Unauthorized' }, 401);
+		return ctx.json({ ok: false, data: null, message: 'Unauthorized' }, 401);
 	}
 
 	ctx.set('jwtPayload', parsedPayload.data);

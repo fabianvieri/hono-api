@@ -19,17 +19,23 @@ export const SignupOpenAPI = createRoute({
 			content: {
 				'application/json': {
 					schema: z.object({
-						id: z.string(),
+						ok: z.boolean(),
+						data: z.object({ id: z.string() }),
+						message: z.null(),
 					}),
 				},
 			},
 		},
-		400: {
-			description: 'Bad request',
+		409: {
+			description: 'Conflict',
 			content: {
 				'application/json': {
 					schema: z.object({
-						message: z.string().openapi({ examples: ['Invalid credentials'] }),
+						ok: z.boolean(),
+						data: z.null(),
+						message: z
+							.string()
+							.openapi({ examples: ['Email already exists'] }),
 					}),
 				},
 			},

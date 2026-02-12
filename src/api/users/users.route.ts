@@ -27,44 +27,32 @@ routes.use(async (c, next) => {
 });
 
 routes.openapi(SigninOpenApi, async (c) => {
-	try {
-		const service = c.get('userService');
-		const { email, password } = c.req.valid('json');
-		const { token, exp } = await service.signIn({ email, password });
-		setCookie(c, 'auth_token', token, {
-			httpOnly: true,
-			secure: true,
-			sameSite: 'None',
-			path: '/',
-			maxAge: Number(c.env.JWT_TTL_SECONDS),
-		});
-		return c.json({ exp }, 200);
-	} catch (error) {
-		return c.json({ message: 'Invalid email or password' }, 401);
-	}
+	const service = c.get('userService');
+	const { email, password } = c.req.valid('json');
+	const { token, exp } = await service.signIn({ email, password });
+	setCookie(c, 'auth_token', token, {
+		httpOnly: true,
+		secure: true,
+		sameSite: 'None',
+		path: '/',
+		maxAge: Number(c.env.JWT_TTL_SECONDS),
+	});
+	return c.json({ ok: true, data: { exp }, message: null }, 200);
 });
 
 routes.openapi(SignupOpenAPI, async (c) => {
-	try {
-		const service = c.get('userService');
-		const { email, password, username } = c.req.valid('json');
-		const id = await service.signUp({ email, password, username });
-		return c.json({ id }, 200);
-	} catch (error) {
-		return c.json({ message: 'Email already exists' }, 400);
-	}
+	const service = c.get('userService');
+	const { email, password, username } = c.req.valid('json');
+	const id = await service.signUp({ email, password, username });
+	return c.json({ ok: true, data: { id }, message: null }, 200);
 });
 
 routes.use(ProfileOpenAPI.getRoutingPath(), auth);
 routes.openapi(ProfileOpenAPI, async (c) => {
-	try {
-		const service = c.get('userService');
-		const userId = c.var.jwtPayload.id;
-		const userProfile = await service.profile({ id: userId });
-		return c.json(userProfile, 200);
-	} catch (error) {
-		return c.json({ message: 'User not found' }, 400);
-	}
+	const service = c.get('userService');
+	const userId = c.var.jwtPayload.id;
+	const userProfile = await service.profile({ id: userId });
+	return c.json({ ok: true, data: userProfile, message: null }, 200);
 });
 
 export { routes as UserRoutes };
