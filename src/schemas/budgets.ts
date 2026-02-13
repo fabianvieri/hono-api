@@ -19,3 +19,4 @@ export const budgets = sqliteTable(
 
 export const BudgetSelectSchema = createSelectSchema(budgets);
 export const BudgetInsertSchema = createInsertSchema(budgets);
+export const BudgetUpdateSchema = BudgetInsertSchema.partial();

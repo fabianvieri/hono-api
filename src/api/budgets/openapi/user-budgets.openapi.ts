@@ -14,7 +14,7 @@ export const UserBudgetsOpenApi = createRoute({
 				'application/json': {
 					schema: z
 						.object({
-							ok: z.boolean(),
+							ok: false,
 							data: z.array(BudgetSelectSchema),
 							message: z.null(),
 						})

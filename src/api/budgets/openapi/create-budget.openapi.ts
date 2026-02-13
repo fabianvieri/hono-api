@@ -7,7 +7,7 @@ import {
 export const CreateBudgetOpenApi = createRoute({
 	method: 'post',
 	tags: ['Budgets'],
-	summary: 'Create budgets',
+	summary: 'Create budget',
 	security: [{ Bearer: [] }],
 	path: '/',
 	request: {
@@ -24,7 +24,7 @@ export const CreateBudgetOpenApi = createRoute({
 				'application/json': {
 					schema: z
 						.object({
-							ok: z.boolean(),
+							ok: false,
 							data: BudgetSelectSchema,
 							message: z.null(),
 						})
@@ -52,7 +52,7 @@ export const CreateBudgetOpenApi = createRoute({
 			content: {
 				'application/json': {
 					schema: z.object({
-						ok: z.boolean(),
+						ok: false,
 						data: z.null(),
 						message: z
 							.string()

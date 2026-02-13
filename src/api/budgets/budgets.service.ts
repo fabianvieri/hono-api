@@ -1,5 +1,9 @@
 import { DrizzleD1Database } from 'drizzle-orm/d1';
-import { BudgetInsertSchema, budgets } from '../../schemas/budgets';
+import {
+	BudgetInsertSchema,
+	budgets,
+	BudgetUpdateSchema,
+} from '../../schemas/budgets';
 import { eq } from 'drizzle-orm';
 import { AppError } from '../../core/errors/app-error';
 import { z } from '@hono/zod-openapi';
@@ -21,6 +25,30 @@ export class BudgetService {
 		const output = await this.db
 			.insert(budgets)
 			.values({ ...budget, userId })
+			.returning()
+			.get();
+
+		return output;
+	}
+
+	public async updateBudget(
+		budget: z.infer<typeof BudgetUpdateSchema>,
+		budgetId: string,
+	) {
+		const output = await this.db
+			.update(budgets)
+			.set({ ...budget })
+			.where(eq(budgets.id, budgetId))
+			.returning()
+			.get();
+
+		return output;
+	}
+
+	public async deleteBudget(budgetId: string) {
+		const output = await this.db
+			.delete(budgets)
+			.where(eq(budgets.id, budgetId))
 			.returning()
 			.get();
 

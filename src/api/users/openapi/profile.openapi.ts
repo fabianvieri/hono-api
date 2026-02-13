@@ -14,7 +14,7 @@ export const ProfileOpenAPI = createRoute({
 				'application/json': {
 					schema: z
 						.object({
-							ok: z.boolean(),
+							ok: false,
 							data: UserPublicSchema,
 							message: z.null(),
 						})
@@ -41,7 +41,7 @@ export const ProfileOpenAPI = createRoute({
 			content: {
 				'application/json': {
 					schema: z.object({
-						ok: z.boolean(),
+						ok: false,
 						data: z.null(),
 						message: z.string().openapi({ examples: ['User not found'] }),
 					}),

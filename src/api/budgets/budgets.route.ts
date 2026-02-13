@@ -4,6 +4,8 @@ import { BudgetService } from './budgets.service';
 import { UserBudgetsOpenApi } from './openapi/user-budgets.openapi';
 import { auth } from '../../core/middlewares/auth';
 import { CreateBudgetOpenApi } from './openapi/create-budget.openapi';
+import { UpdateBudgetOpenApi } from './openapi/update-budget.openapi';
+import { DeleteBudgetOpenApi } from './openapi/delete-budget.openapi';
 
 const routes = new OpenAPIHono<{
 	Bindings: Bindings;
@@ -18,6 +20,7 @@ routes.use(async (c, next) => {
 
 routes.use(UserBudgetsOpenApi.getRoutingPath(), auth);
 routes.openapi(UserBudgetsOpenApi, async (c) => {
+	console.log('masuk');
 	const service = c.get('budgetService');
 	const userId = c.var.jwtPayload.id;
 	const budgets = await service.getBudgetsByUserId(userId);
@@ -30,6 +33,25 @@ routes.openapi(CreateBudgetOpenApi, async (c) => {
 	const body = c.req.valid('json');
 	const userId = c.var.jwtPayload.id;
 	const budgets = await service.createBudget(body, userId);
+	return c.json({ ok: true, data: budgets, message: null }, 200);
+});
+
+routes.use(UpdateBudgetOpenApi.getRoutingPath(), auth);
+routes.openapi(UpdateBudgetOpenApi, async (c) => {
+	console.log('masuk');
+	const service = c.get('budgetService');
+	const body = c.req.valid('json');
+
+	const { id: budgetId } = c.req.valid('param');
+	const budgets = await service.updateBudget(body, budgetId);
+	return c.json({ ok: true, data: budgets, message: null }, 200);
+});
+
+routes.use(DeleteBudgetOpenApi.getRoutingPath(), auth);
+routes.openapi(DeleteBudgetOpenApi, async (c) => {
+	const service = c.get('budgetService');
+	const { id: budgetId } = c.req.valid('param');
+	const budgets = await service.deleteBudget(budgetId);
 	return c.json({ ok: true, data: budgets, message: null }, 200);
 });
 
