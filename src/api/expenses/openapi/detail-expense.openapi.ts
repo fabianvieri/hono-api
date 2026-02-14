@@ -1,24 +1,26 @@
 import { createRoute, z } from '@hono/zod-openapi';
 
-import { ExpenseCreateSchema, ExpenseSelectSchema } from '@schemas/expenses';
+import { ExpenseSelectSchema } from '@schemas/expenses';
 
-export const CreateExpenseOpenApi = createRoute({
-	method: 'post',
+export const DetailExpenseOpenApi = createRoute({
+	method: 'get',
 	tags: ['Expenses'],
-	summary: 'Create expense',
+	summary: 'Get expense by ID',
 	security: [{ Bearer: [] }],
-	path: '/',
+	path: '/:expenseId',
 	request: {
-		body: {
-			content: {
-				'application/json': {
-					schema: ExpenseCreateSchema,
+		params: z.object({
+			expenseId: z.string().openapi({
+				param: {
+					name: 'expenseId',
+					in: 'path',
 				},
-			},
-		},
+				example: 'clx0d0d0d0d0d0d0d0d0d0d0',
+			}),
+		}),
 	},
 	responses: {
-		201: {
+		200: {
 			description: 'Success',
 			content: {
 				'application/json': {
@@ -47,20 +49,6 @@ export const CreateExpenseOpenApi = createRoute({
 				},
 			},
 		},
-		400: {
-			description: 'Bad Request',
-			content: {
-				'application/json': {
-					schema: z.object({
-						ok: z.boolean(),
-						data: z.null(),
-						message: z
-							.string()
-							.openapi({ examples: ['Error creating expense'] }),
-					}),
-				},
-			},
-		},
 		404: {
 			description: 'Not Found',
 			content: {
@@ -69,7 +57,7 @@ export const CreateExpenseOpenApi = createRoute({
 						ok: z.boolean(),
 						data: z.null(),
 						message: z.string().openapi({
-							examples: ['Budget not found or does not belong to the user'],
+							examples: ['Expense not found or does not belong to the user'],
 						}),
 					}),
 				},

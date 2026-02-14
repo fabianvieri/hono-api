@@ -1,14 +1,9 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 
-
 import { ExpenseService } from '@api/expenses/expenses.service';
 import { CreateExpenseOpenApi } from '@api/expenses/openapi/create-expense.openapi';
 import { DeleteExpenseOpenApi } from '@api/expenses/openapi/delete-expense.openapi';
 import { UpdateExpenseOpenApi } from '@api/expenses/openapi/update-expense.openapi';
-import {
-	UserExpensesByBudgetIdOpenApi,
-	GetExpenseByIdOpenApi,
-} from '@api/expenses/openapi/user-expenses.openapi';
 import { auth } from '@core/middlewares/auth';
 
 import type { Bindings, Variables } from '@core/configs/worker';
@@ -33,17 +28,8 @@ routes.openapi(CreateExpenseOpenApi, async (c) => {
 	return c.json({ ok: true, data: newExpense, message: null }, 201);
 });
 
-// Get Expenses by Budget ID
-routes.openapi(UserExpensesByBudgetIdOpenApi, async (c) => {
-	const expenseService = c.get('expenseService');
-	const userId = c.var.jwtPayload.id;
-	const { budgetId } = c.req.valid('param');
-	const expenses = await expenseService.getExpensesByBudgetId(budgetId, userId);
-	return c.json({ ok: true, data: expenses, message: null }, 200);
-});
-
 // Get Expense by ID
-routes.openapi(GetExpenseByIdOpenApi, async (c) => {
+routes.openapi(DeleteExpenseOpenApi, async (c) => {
 	const expenseService = c.get('expenseService');
 	const userId = c.var.jwtPayload.id;
 	const { expenseId } = c.req.valid('param');
@@ -75,4 +61,3 @@ routes.openapi(DeleteExpenseOpenApi, async (c) => {
 });
 
 export { routes as ExpenseRoutes };
-
