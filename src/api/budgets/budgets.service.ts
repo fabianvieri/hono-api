@@ -4,7 +4,7 @@ import {
 	budgets,
 	BudgetUpdateSchema,
 } from '../../schemas/budgets';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { AppError } from '../../core/errors/app-error';
 import { z } from '@hono/zod-openapi';
 
@@ -22,9 +22,17 @@ export class BudgetService {
 		budget: z.infer<typeof BudgetInsertSchema>,
 		userId: string,
 	) {
+		const {
+			id: _ignoredId,
+			createdAt: _ignoredCreatedAt,
+			updatedAt: _ignoredUpdatedAt,
+			userId: _ignoredUserId,
+			...budgetPayload
+		} = budget;
+
 		const output = await this.db
 			.insert(budgets)
-			.values({ ...budget, userId })
+			.values({ ...budgetPayload, userId })
 			.returning()
 			.get();
 
@@ -34,23 +42,52 @@ export class BudgetService {
 	public async updateBudget(
 		budget: z.infer<typeof BudgetUpdateSchema>,
 		budgetId: string,
+		userId: string,
 	) {
+		const {
+			id: _ignoredId,
+			createdAt: _ignoredCreatedAt,
+			updatedAt: _ignoredUpdatedAt,
+			userId: _ignoredUserId,
+			...budgetPayload
+		} = budget;
+
+		if (Object.keys(budgetPayload).length === 0) {
+			throw new AppError(400, 'EMPTY_UPDATE_PAYLOAD', 'No fields to update');
+		}
+
 		const output = await this.db
 			.update(budgets)
-			.set({ ...budget })
-			.where(eq(budgets.id, budgetId))
+			.set({ ...budgetPayload })
+			.where(and(eq(budgets.id, budgetId), eq(budgets.userId, userId)))
 			.returning()
 			.get();
+
+		if (!output) {
+			throw new AppError(
+				404,
+				'BUDGET_NOT_FOUND',
+				'Budget not found or does not belong to the user',
+			);
+		}
 
 		return output;
 	}
 
-	public async deleteBudget(budgetId: string) {
+	public async deleteBudget(budgetId: string, userId: string) {
 		const output = await this.db
 			.delete(budgets)
-			.where(eq(budgets.id, budgetId))
+			.where(and(eq(budgets.id, budgetId), eq(budgets.userId, userId)))
 			.returning()
 			.get();
+
+		if (!output) {
+			throw new AppError(
+				404,
+				'BUDGET_NOT_FOUND',
+				'Budget not found or does not belong to the user',
+			);
+		}
 
 		return output;
 	}

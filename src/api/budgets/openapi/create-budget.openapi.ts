@@ -18,7 +18,7 @@ export const CreateBudgetOpenApi = createRoute({
 		},
 	},
 	responses: {
-		200: {
+		201: {
 			description: 'Success',
 			content: {
 				'application/json': {

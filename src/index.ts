@@ -6,6 +6,7 @@ import { secureHeaders } from 'hono/secure-headers';
 import { Bindings, Variables } from './core/configs/worker';
 import { DrizzleDB } from './core/db/drizzle';
 import { BudgetRoutes } from './api/budgets/budgets.route';
+import { ExpenseRoutes } from './api/expenses/expenses.route';
 import { UserRoutes } from './api/users/users.route';
 import { AppError } from './core/errors/app-error';
 
@@ -55,5 +56,6 @@ app.use(async (ctx, next) => {
 
 app.route('/api/users', UserRoutes);
 app.route('/api/budgets', BudgetRoutes);
+app.route('/api/expenses', ExpenseRoutes);
 
 export default app;
