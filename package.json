@@ -4,6 +4,8 @@
 	"scripts": {
 		"dev": "wrangler dev",
 		"deploy": "wrangler deploy --minify",
+		"lint": "eslint \"src/**/*.ts\" \"drizzle.config.ts\" --cache",
+		"lint:fix": "eslint \"src/**/*.ts\" \"drizzle.config.ts\" --fix",
 		"cf-typegen": "wrangler typesc",
 		"db:generate": "drizzle-kit generate",
 		"db:seed": "wrangler d1 execute hono-api-db --file=seed.sql",
@@ -22,7 +24,14 @@
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20260203.0",
+		"@eslint/js": "^9.39.2",
 		"drizzle-kit": "^0.31.8",
+		"eslint": "^9.39.2",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-import-resolver-typescript": "^4.4.4",
+		"eslint-plugin-import": "^2.32.0",
+		"globals": "^17.3.0",
+		"typescript-eslint": "^8.55.0",
 		"wrangler": "^4.4.0"
 	}
 }
