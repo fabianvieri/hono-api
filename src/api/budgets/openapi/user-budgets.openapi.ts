@@ -1,6 +1,6 @@
 import { createRoute, z } from '@hono/zod-openapi';
 
-import { BudgetSelectSchema } from '../../../schemas/budgets';
+import { BudgetSelectSchema } from '@schemas/budgets';
 
 export const UserBudgetsOpenApi = createRoute({
 	method: 'get',
@@ -42,3 +42,4 @@ export const UserBudgetsOpenApi = createRoute({
 		},
 	},
 });
+

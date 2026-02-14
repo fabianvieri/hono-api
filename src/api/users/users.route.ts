@@ -1,14 +1,14 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { setCookie } from 'hono/cookie';
 
-import { auth } from '../../core/middlewares/auth';
 
-import { ProfileOpenAPI } from './openapi/profile.openapi';
-import { SigninOpenApi } from './openapi/signin.openapi';
-import { SignupOpenAPI } from './openapi/singup.openapi';
-import { UserService } from './users.service';
+import { ProfileOpenAPI } from '@api/users/openapi/profile.openapi';
+import { SigninOpenApi } from '@api/users/openapi/signin.openapi';
+import { SignupOpenAPI } from '@api/users/openapi/singup.openapi';
+import { UserService } from '@api/users/users.service';
+import { auth } from '@core/middlewares/auth';
 
-import type { Bindings, Variables } from '../../core/configs/worker';
+import type { Bindings, Variables } from '@core/configs/worker';
 
 const routes = new OpenAPIHono<{
 	Bindings: Bindings;
@@ -59,3 +59,4 @@ routes.openapi(ProfileOpenAPI, async (c) => {
 });
 
 export { routes as UserRoutes };
+

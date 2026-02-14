@@ -1,6 +1,6 @@
 import { createRoute, z } from '@hono/zod-openapi';
 
-import { ExpenseInsertSchema, ExpenseSelectSchema } from '../../../schemas/expenses';
+import { ExpenseInsertSchema, ExpenseSelectSchema } from '@schemas/expenses';
 
 const ExpenseCreateRequestSchema = ExpenseInsertSchema.omit({
 	id: true,
@@ -88,3 +88,4 @@ export const CreateExpenseOpenApi = createRoute({
 		},
 	},
 });
+

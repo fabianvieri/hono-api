@@ -2,7 +2,7 @@ import { z } from '@hono/zod-openapi';
 import { getCookie } from 'hono/cookie';
 import { decode, verify } from 'hono/jwt';
 
-import type { Bindings, Variables } from '../configs/worker';
+import type { Bindings, Variables } from '@core/configs/worker';
 import type { Context, Next } from 'hono';
 
 export const auth = async (
@@ -44,3 +44,4 @@ export const auth = async (
 
 	await next();
 };
+

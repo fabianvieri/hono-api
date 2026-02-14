@@ -4,13 +4,13 @@ import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { secureHeaders } from 'hono/secure-headers';
 
-import { BudgetRoutes } from './api/budgets/budgets.route';
-import { ExpenseRoutes } from './api/expenses/expenses.route';
-import { UserRoutes } from './api/users/users.route';
-import { DrizzleDB } from './core/db/drizzle';
-import { AppError } from './core/errors/app-error';
+import { BudgetRoutes } from '@api/budgets/budgets.route';
+import { ExpenseRoutes } from '@api/expenses/expenses.route';
+import { UserRoutes } from '@api/users/users.route';
+import { DrizzleDB } from '@core/db/drizzle';
+import { AppError } from '@core/errors/app-error';
 
-import type { Bindings, Variables } from './core/configs/worker';
+import type { Bindings, Variables } from '@core/configs/worker';
 
 const app = new OpenAPIHono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -61,3 +61,4 @@ app.route('/api/budgets', BudgetRoutes);
 app.route('/api/expenses', ExpenseRoutes);
 
 export default app;
+

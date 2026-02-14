@@ -1,13 +1,13 @@
 import { eq } from 'drizzle-orm';
 import { sign } from 'hono/jwt';
 
-import { AppError } from '../../core/errors/app-error';
-import { users } from '../../schemas/users';
+import { hashPassword, verifyPassword } from '@api/users/utils/password';
+import { AppError } from '@core/errors/app-error';
+import { users } from '@schemas/users';
 
-import { hashPassword, verifyPassword } from './utils/password';
 
-import type { UserSignInSchema, UserSignUpSchema } from '../../schemas/users';
 import type { z } from '@hono/zod-openapi';
+import type { UserSignInSchema, UserSignUpSchema } from '@schemas/users';
 import type { DrizzleD1Database } from 'drizzle-orm/d1';
 
 export class UserService {
@@ -98,3 +98,4 @@ export class UserService {
 		return user;
 	}
 }
+

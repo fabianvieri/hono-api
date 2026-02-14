@@ -1,14 +1,14 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 
-import { auth } from '../../core/middlewares/auth';
 
-import { BudgetService } from './budgets.service';
-import { CreateBudgetOpenApi } from './openapi/create-budget.openapi';
-import { DeleteBudgetOpenApi } from './openapi/delete-budget.openapi';
-import { UpdateBudgetOpenApi } from './openapi/update-budget.openapi';
-import { UserBudgetsOpenApi } from './openapi/user-budgets.openapi';
+import { BudgetService } from '@api/budgets/budgets.service';
+import { CreateBudgetOpenApi } from '@api/budgets/openapi/create-budget.openapi';
+import { DeleteBudgetOpenApi } from '@api/budgets/openapi/delete-budget.openapi';
+import { UpdateBudgetOpenApi } from '@api/budgets/openapi/update-budget.openapi';
+import { UserBudgetsOpenApi } from '@api/budgets/openapi/user-budgets.openapi';
+import { auth } from '@core/middlewares/auth';
 
-import type { Bindings, Variables } from '../../core/configs/worker';
+import type { Bindings, Variables } from '@core/configs/worker';
 
 const routes = new OpenAPIHono<{
 	Bindings: Bindings;
@@ -58,3 +58,4 @@ routes.openapi(DeleteBudgetOpenApi, async (c) => {
 });
 
 export { routes as BudgetRoutes };
+

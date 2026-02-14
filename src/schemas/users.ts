@@ -1,7 +1,7 @@
 import { index, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
-import { baseColumns } from './base';
+import { baseColumns } from '@schemas/base';
 
 export const users = sqliteTable(
 	'users',
@@ -27,3 +27,4 @@ export const UserSignUpSchema = UserInsertSchema.pick({
 	username: true,
 	password: true,
 });
+

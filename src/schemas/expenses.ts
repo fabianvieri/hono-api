@@ -1,8 +1,8 @@
 import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
 import { createSelectSchema , createInsertSchema } from 'drizzle-zod';
 
-import { baseColumns } from './base';
-import { budgets } from './budgets';
+import { baseColumns } from '@schemas/base';
+import { budgets } from '@schemas/budgets';
 
 
 export const expenses = sqliteTable(
@@ -21,3 +21,4 @@ export const expenses = sqliteTable(
 export const ExpenseSelectSchema = createSelectSchema(expenses);
 export const ExpenseInsertSchema = createInsertSchema(expenses);
 export const ExpenseUpdateSchema = ExpenseInsertSchema.partial();
+

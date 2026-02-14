@@ -3,6 +3,12 @@
 		"target": "ESNext",
 		"module": "ESNext",
 		"moduleResolution": "Bundler",
+		"baseUrl": ".",
+		"paths": {
+			"@api/*": ["src/api/*"],
+			"@core/*": ["src/core/*"],
+			"@schemas/*": ["src/schemas/*"]
+		},
 		"strict": true,
 		"skipLibCheck": true,
 		"lib": ["ESNext"],

@@ -1,6 +1,6 @@
 import { createRoute, z } from '@hono/zod-openapi';
 
-import { BudgetSelectSchema } from '../../../schemas/budgets';
+import { BudgetSelectSchema } from '@schemas/budgets';
 
 export const DeleteBudgetOpenApi = createRoute({
 	method: 'delete',
@@ -57,3 +57,4 @@ export const DeleteBudgetOpenApi = createRoute({
 		},
 	},
 });
+

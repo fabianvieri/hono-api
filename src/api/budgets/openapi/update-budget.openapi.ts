@@ -3,7 +3,7 @@ import { createRoute, z } from '@hono/zod-openapi';
 import {
 	BudgetSelectSchema,
 	BudgetUpdateSchema,
-} from '../../../schemas/budgets';
+} from '@schemas/budgets';
 
 export const UpdateBudgetOpenApi = createRoute({
 	method: 'patch',
@@ -65,3 +65,4 @@ export const UpdateBudgetOpenApi = createRoute({
 		},
 	},
 });
+

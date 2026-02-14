@@ -1,14 +1,14 @@
 import { eq, and } from 'drizzle-orm';
 
-import { AppError } from '../../core/errors/app-error';
-import { budgets } from '../../schemas/budgets';
-import { expenses } from '../../schemas/expenses';
+import { AppError } from '@core/errors/app-error';
+import { budgets } from '@schemas/budgets';
+import { expenses } from '@schemas/expenses';
 
+import type { z } from '@hono/zod-openapi';
 import type {
 	ExpenseInsertSchema,
 	ExpenseUpdateSchema,
-} from '../../schemas/expenses';
-import type { z } from '@hono/zod-openapi';
+} from '@schemas/expenses';
 import type { DrizzleD1Database } from 'drizzle-orm/d1';
 
 export class ExpenseService {
@@ -196,3 +196,4 @@ export class ExpenseService {
 		return output;
 	}
 }
+
