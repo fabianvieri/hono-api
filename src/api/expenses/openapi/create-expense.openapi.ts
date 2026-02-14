@@ -2,13 +2,6 @@ import { createRoute, z } from '@hono/zod-openapi';
 
 import { ExpenseCreateSchema, ExpenseSelectSchema } from '@schemas/expenses';
 
-const ExpenseCreateRequestSchema = ExpenseCreateSchema.extend({
-	budgetId: z.string().openapi({
-		example: 'some-random-id',
-		description: 'The ID of the budget this expense belongs to.',
-	}),
-});
-
 export const CreateExpenseOpenApi = createRoute({
 	method: 'post',
 	tags: ['Expenses'],
@@ -19,7 +12,7 @@ export const CreateExpenseOpenApi = createRoute({
 		body: {
 			content: {
 				'application/json': {
-					schema: ExpenseCreateRequestSchema,
+					schema: ExpenseCreateSchema,
 				},
 			},
 		},

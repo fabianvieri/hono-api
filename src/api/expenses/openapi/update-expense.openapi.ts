@@ -2,12 +2,6 @@ import { createRoute, z } from '@hono/zod-openapi';
 
 import { ExpenseSelectSchema, ExpenseUpdateSchema } from '@schemas/expenses';
 
-const ExpenseUpdateRequestSchema = ExpenseUpdateSchema.omit({
-	id: true,
-	createdAt: true,
-	updatedAt: true,
-});
-
 export const UpdateExpenseOpenApi = createRoute({
 	method: 'patch',
 	tags: ['Expenses'],
@@ -26,7 +20,7 @@ export const UpdateExpenseOpenApi = createRoute({
 		}),
 		body: {
 			content: {
-				'application/json': { schema: ExpenseUpdateRequestSchema },
+				'application/json': { schema: ExpenseUpdateSchema },
 			},
 		},
 	},

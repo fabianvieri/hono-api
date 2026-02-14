@@ -5,13 +5,6 @@ import {
 	BudgetUpdateSchema,
 } from '@schemas/budgets';
 
-const BudgetUpdateRequestSchema = BudgetUpdateSchema.omit({
-	id: true,
-	createdAt: true,
-	updatedAt: true,
-	userId: true,
-});
-
 export const UpdateBudgetOpenApi = createRoute({
 	method: 'patch',
 	tags: ['Budgets'],
@@ -30,7 +23,7 @@ export const UpdateBudgetOpenApi = createRoute({
 		}),
 		body: {
 			content: {
-				'application/json': { schema: BudgetUpdateRequestSchema },
+				'application/json': { schema: BudgetUpdateSchema },
 			},
 		},
 	},

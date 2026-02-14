@@ -24,4 +24,4 @@ export const ExpenseCreateSchema = ExpenseInsertSchema.omit({
 	createdAt: true,
 	updatedAt: true,
 });
-export const ExpenseUpdateSchema = ExpenseInsertSchema.partial();
+export const ExpenseUpdateSchema = ExpenseCreateSchema.partial();

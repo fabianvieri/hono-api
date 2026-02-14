@@ -2,13 +2,13 @@ import { eq, and } from 'drizzle-orm';
 
 import { AppError } from '@core/errors/app-error';
 import { budgets } from '@schemas/budgets';
-import { expenses } from '@schemas/expenses';
+import {
+	expenses,
+	type ExpenseCreateSchema,
+	type ExpenseUpdateSchema,
+} from '@schemas/expenses';
 
 import type { z } from '@hono/zod-openapi';
-import type {
-	ExpenseInsertSchema,
-	ExpenseUpdateSchema,
-} from '@schemas/expenses';
 import type { DrizzleD1Database } from 'drizzle-orm/d1';
 
 export class ExpenseService {
@@ -22,25 +22,13 @@ export class ExpenseService {
 	}
 
 	public async createExpense(
-		expense: z.infer<typeof ExpenseInsertSchema>,
+		expense: z.infer<typeof ExpenseCreateSchema>,
 		userId: string,
 	) {
-		const {
-			id: _ignoredId,
-			createdAt: _ignoredCreatedAt,
-			updatedAt: _ignoredUpdatedAt,
-			...expensePayload
-		} = expense;
-
 		const budgetExists = await this.db
 			.select({ id: budgets.id })
 			.from(budgets)
-			.where(
-				and(
-					eq(budgets.id, expensePayload.budgetId),
-					eq(budgets.userId, userId),
-				),
-			)
+			.where(and(eq(budgets.id, expense.budgetId), eq(budgets.userId, userId)))
 			.get();
 
 		if (!budgetExists) {
@@ -53,7 +41,7 @@ export class ExpenseService {
 
 		const output = await this.db
 			.insert(expenses)
-			.values({ ...expensePayload })
+			.values({ ...expense })
 			.returning()
 			.get();
 
@@ -65,14 +53,7 @@ export class ExpenseService {
 		expenseId: string,
 		userId: string,
 	) {
-		const {
-			id: _ignoredId,
-			createdAt: _ignoredCreatedAt,
-			updatedAt: _ignoredUpdatedAt,
-			...expensePayload
-		} = expense;
-
-		if (Object.keys(expensePayload).length === 0) {
+		if (Object.keys(expense).length === 0) {
 			throw new AppError(400, 'EMPTY_UPDATE_PAYLOAD', 'No fields to update');
 		}
 
@@ -91,15 +72,12 @@ export class ExpenseService {
 			);
 		}
 
-		if (expensePayload.budgetId) {
+		if (expense.budgetId) {
 			const budgetExists = await this.db
 				.select({ id: budgets.id })
 				.from(budgets)
 				.where(
-					and(
-						eq(budgets.id, expensePayload.budgetId),
-						eq(budgets.userId, userId),
-					),
+					and(eq(budgets.id, expense.budgetId), eq(budgets.userId, userId)),
 				)
 				.get();
 
@@ -114,7 +92,7 @@ export class ExpenseService {
 
 		const output = await this.db
 			.update(expenses)
-			.set({ ...expensePayload })
+			.set({ ...expense })
 			.where(eq(expenses.id, expenseId))
 			.returning()
 			.get();
@@ -196,4 +174,3 @@ export class ExpenseService {
 		return output;
 	}
 }
-
