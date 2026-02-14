@@ -3,6 +3,7 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import { ExpenseService } from '@api/expenses/expenses.service';
 import { CreateExpenseOpenApi } from '@api/expenses/openapi/create-expense.openapi';
 import { DeleteExpenseOpenApi } from '@api/expenses/openapi/delete-expense.openapi';
+import { DetailExpenseOpenApi } from '@api/expenses/openapi/detail-expense.openapi';
 import { UpdateExpenseOpenApi } from '@api/expenses/openapi/update-expense.openapi';
 import { auth } from '@core/middlewares/auth';
 
@@ -29,7 +30,7 @@ routes.openapi(CreateExpenseOpenApi, async (c) => {
 });
 
 // Get Expense by ID
-routes.openapi(DeleteExpenseOpenApi, async (c) => {
+routes.openapi(DetailExpenseOpenApi, async (c) => {
 	const expenseService = c.get('expenseService');
 	const userId = c.var.jwtPayload.id;
 	const { expenseId } = c.req.valid('param');

@@ -19,11 +19,21 @@ export const SignupOpenAPI = createRoute({
 			description: 'Success',
 			content: {
 				'application/json': {
-					schema: z.object({
-						ok: false,
-						data: z.object({ id: z.string() }),
-						message: z.null(),
-					}),
+					schema: z
+						.object({
+							ok: z.literal(true),
+							data: z.object({ id: z.string() }),
+							message: z.null(),
+						})
+						.openapi({
+							examples: [
+								{
+									ok: true,
+									data: { id: 'some-random-id' },
+									message: null,
+								},
+							],
+						}),
 				},
 			},
 		},
@@ -32,7 +42,7 @@ export const SignupOpenAPI = createRoute({
 			content: {
 				'application/json': {
 					schema: z.object({
-						ok: false,
+						ok: z.literal(false),
 						data: z.null(),
 						message: z.string().openapi({ examples: ['Email already exists'] }),
 					}),

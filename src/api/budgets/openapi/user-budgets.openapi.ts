@@ -15,7 +15,7 @@ export const UserBudgetsOpenApi = createRoute({
 				'application/json': {
 					schema: z
 						.object({
-							ok: false,
+							ok: z.literal(true),
 							data: z.array(BudgetSelectSchema),
 							message: z.null(),
 						})
@@ -25,8 +25,8 @@ export const UserBudgetsOpenApi = createRoute({
 									ok: true,
 									data: [
 										{
-											id: 1,
-											userId: 5,
+											id: 'some-random-id',
+											userId: 'some-random-id',
 											amount: 1000,
 											name: 'Test Budget',
 											createdAt: '2026-02-07 13:47:16',
@@ -37,6 +37,18 @@ export const UserBudgetsOpenApi = createRoute({
 								},
 							],
 						}),
+				},
+			},
+		},
+		401: {
+			description: 'Unauthorized',
+			content: {
+				'application/json': {
+					schema: z.object({
+						ok: z.literal(false),
+						data: z.null(),
+						message: z.string().openapi({ examples: ['Unauthorized'] }),
+					}),
 				},
 			},
 		},

@@ -1,9 +1,6 @@
 import { createRoute, z } from '@hono/zod-openapi';
 
-import {
-	BudgetInsertSchema,
-	BudgetSelectSchema,
-} from '@schemas/budgets';
+import { BudgetCreateSchema, BudgetSelectSchema } from '@schemas/budgets';
 
 export const CreateBudgetOpenApi = createRoute({
 	method: 'post',
@@ -14,7 +11,7 @@ export const CreateBudgetOpenApi = createRoute({
 	request: {
 		body: {
 			content: {
-				'application/json': { schema: BudgetInsertSchema },
+				'application/json': { schema: BudgetCreateSchema },
 			},
 		},
 	},
@@ -25,7 +22,7 @@ export const CreateBudgetOpenApi = createRoute({
 				'application/json': {
 					schema: z
 						.object({
-							ok: false,
+							ok: z.literal(true),
 							data: BudgetSelectSchema,
 							message: z.null(),
 						})
@@ -34,8 +31,8 @@ export const CreateBudgetOpenApi = createRoute({
 								{
 									ok: true,
 									data: {
-										id: 1,
-										userId: 5,
+										id: 'some-random-id',
+										userId: 'some-random-id',
 										amount: 1000,
 										name: 'Test Budget',
 										createdAt: '2026-02-07 13:47:16',
@@ -53,7 +50,7 @@ export const CreateBudgetOpenApi = createRoute({
 			content: {
 				'application/json': {
 					schema: z.object({
-						ok: false,
+						ok: z.literal(false),
 						data: z.null(),
 						message: z
 							.string()
@@ -62,6 +59,17 @@ export const CreateBudgetOpenApi = createRoute({
 				},
 			},
 		},
+		401: {
+			description: 'Unauthorized',
+			content: {
+				'application/json': {
+					schema: z.object({
+						ok: z.literal(false),
+						data: z.null(),
+						message: z.string().openapi({ examples: ['Unauthorized'] }),
+					}),
+				},
+			},
+		},
 	},
 });
-

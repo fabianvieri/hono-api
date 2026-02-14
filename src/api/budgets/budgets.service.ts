@@ -4,10 +4,7 @@ import { AppError } from '@core/errors/app-error';
 import { budgets } from '@schemas/budgets';
 
 import type { z } from '@hono/zod-openapi';
-import type {
-	BudgetInsertSchema,
-	BudgetUpdateSchema,
-} from '@schemas/budgets';
+import type { BudgetCreateSchema, BudgetUpdateSchema } from '@schemas/budgets';
 import type { DrizzleD1Database } from 'drizzle-orm/d1';
 
 export class BudgetService {
@@ -21,20 +18,12 @@ export class BudgetService {
 	}
 
 	public async createBudget(
-		budget: z.infer<typeof BudgetInsertSchema>,
+		budget: z.infer<typeof BudgetCreateSchema>,
 		userId: string,
 	) {
-		const {
-			id: _ignoredId,
-			createdAt: _ignoredCreatedAt,
-			updatedAt: _ignoredUpdatedAt,
-			userId: _ignoredUserId,
-			...budgetPayload
-		} = budget;
-
 		const output = await this.db
 			.insert(budgets)
-			.values({ ...budgetPayload, userId })
+			.values({ ...budget, userId })
 			.returning()
 			.get();
 
@@ -103,4 +92,3 @@ export class BudgetService {
 		return output;
 	}
 }
-

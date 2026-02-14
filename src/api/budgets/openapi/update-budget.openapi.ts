@@ -5,6 +5,13 @@ import {
 	BudgetUpdateSchema,
 } from '@schemas/budgets';
 
+const BudgetUpdateRequestSchema = BudgetUpdateSchema.omit({
+	id: true,
+	createdAt: true,
+	updatedAt: true,
+	userId: true,
+});
+
 export const UpdateBudgetOpenApi = createRoute({
 	method: 'patch',
 	tags: ['Budgets'],
@@ -12,10 +19,18 @@ export const UpdateBudgetOpenApi = createRoute({
 	security: [{ Bearer: [] }],
 	path: '/:id',
 	request: {
-		params: z.object({ id: z.string() }),
+		params: z.object({
+			id: z.string().openapi({
+				param: {
+					name: 'id',
+					in: 'path',
+				},
+				example: 'some-random-id',
+			}),
+		}),
 		body: {
 			content: {
-				'application/json': { schema: BudgetUpdateSchema },
+				'application/json': { schema: BudgetUpdateRequestSchema },
 			},
 		},
 	},
@@ -26,7 +41,7 @@ export const UpdateBudgetOpenApi = createRoute({
 				'application/json': {
 					schema: z
 						.object({
-							ok: false,
+							ok: z.literal(true),
 							data: BudgetSelectSchema,
 							message: z.null(),
 						})
@@ -35,8 +50,8 @@ export const UpdateBudgetOpenApi = createRoute({
 								{
 									ok: true,
 									data: {
-										id: 1,
-										userId: 5,
+										id: 'some-random-id',
+										userId: 'some-random-id',
 										amount: 1000,
 										name: 'Test Budget',
 										createdAt: '2026-02-07 13:47:16',
@@ -54,11 +69,37 @@ export const UpdateBudgetOpenApi = createRoute({
 			content: {
 				'application/json': {
 					schema: z.object({
-						ok: false,
+						ok: z.literal(false),
 						data: z.null(),
 						message: z
 							.string()
 							.openapi({ examples: ['Error updating budget'] }),
+					}),
+				},
+			},
+		},
+		401: {
+			description: 'Unauthorized',
+			content: {
+				'application/json': {
+					schema: z.object({
+						ok: z.literal(false),
+						data: z.null(),
+						message: z.string().openapi({ examples: ['Unauthorized'] }),
+					}),
+				},
+			},
+		},
+		404: {
+			description: 'Not Found',
+			content: {
+				'application/json': {
+					schema: z.object({
+						ok: z.literal(false),
+						data: z.null(),
+						message: z.string().openapi({
+							examples: ['Budget not found or does not belong to the user'],
+						}),
 					}),
 				},
 			},

@@ -15,7 +15,7 @@ export const DetailExpenseOpenApi = createRoute({
 					name: 'expenseId',
 					in: 'path',
 				},
-				example: 'clx0d0d0d0d0d0d0d0d0d0d0',
+				example: 'some-random-id',
 			}),
 		}),
 	},
@@ -26,7 +26,7 @@ export const DetailExpenseOpenApi = createRoute({
 				'application/json': {
 					schema: z
 						.object({
-							ok: z.boolean(),
+							ok: z.literal(true),
 							data: ExpenseSelectSchema,
 							message: z.null(),
 						})
@@ -35,8 +35,8 @@ export const DetailExpenseOpenApi = createRoute({
 								{
 									ok: true,
 									data: {
-										id: 'clx0d0d0d0d0d0d0d0d0d0d0',
-										budgetId: 'clx0d0d0d0d0d0d0d0d0d0d0',
+										id: 'some-random-id',
+										budgetId: 'some-random-id',
 										name: 'Groceries',
 										amount: 5000,
 										createdAt: '2026-02-07 13:47:16',
@@ -54,11 +54,23 @@ export const DetailExpenseOpenApi = createRoute({
 			content: {
 				'application/json': {
 					schema: z.object({
-						ok: z.boolean(),
+						ok: z.literal(false),
 						data: z.null(),
 						message: z.string().openapi({
 							examples: ['Expense not found or does not belong to the user'],
 						}),
+					}),
+				},
+			},
+		},
+		401: {
+			description: 'Unauthorized',
+			content: {
+				'application/json': {
+					schema: z.object({
+						ok: z.literal(false),
+						data: z.null(),
+						message: z.string().openapi({ examples: ['Unauthorized'] }),
 					}),
 				},
 			},

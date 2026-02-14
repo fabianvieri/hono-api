@@ -15,7 +15,7 @@ export const ProfileOpenAPI = createRoute({
 				'application/json': {
 					schema: z
 						.object({
-							ok: false,
+							ok: z.literal(true),
 							data: UserPublicSchema,
 							message: z.null(),
 						})
@@ -24,7 +24,7 @@ export const ProfileOpenAPI = createRoute({
 								{
 									ok: true,
 									data: {
-										id: 3,
+										id: 'some-random-id',
 										email: 'test@gmail.com',
 										username: 'test',
 										createdAt: '2026-02-08 12:19:41',
@@ -42,9 +42,21 @@ export const ProfileOpenAPI = createRoute({
 			content: {
 				'application/json': {
 					schema: z.object({
-						ok: false,
+						ok: z.literal(false),
 						data: z.null(),
 						message: z.string().openapi({ examples: ['User not found'] }),
+					}),
+				},
+			},
+		},
+		401: {
+			description: 'Unauthorized',
+			content: {
+				'application/json': {
+					schema: z.object({
+						ok: z.literal(false),
+						data: z.null(),
+						message: z.string().openapi({ examples: ['Unauthorized'] }),
 					}),
 				},
 			},

@@ -20,7 +20,7 @@ export const SigninOpenApi = createRoute({
 			content: {
 				'application/json': {
 					schema: z.object({
-						ok: false,
+						ok: z.literal(true),
 						data: z.object({ exp: z.number() }),
 						message: z.null(),
 					}),
@@ -32,7 +32,7 @@ export const SigninOpenApi = createRoute({
 			content: {
 				'application/json': {
 					schema: z.object({
-						ok: false,
+						ok: z.literal(false),
 						data: z.null(),
 						message: z.string().openapi({ examples: ['Invalid credentials'] }),
 					}),
