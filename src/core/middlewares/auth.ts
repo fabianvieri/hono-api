@@ -1,8 +1,9 @@
-import { Context, Next } from 'hono';
-import { decode, verify } from 'hono/jwt';
 import { z } from '@hono/zod-openapi';
 import { getCookie } from 'hono/cookie';
-import { Bindings, Variables } from '../configs/worker';
+import { decode, verify } from 'hono/jwt';
+
+import type { Bindings, Variables } from '../configs/worker';
+import type { Context, Next } from 'hono';
 
 export const auth = async (
 	ctx: Context<{ Bindings: Bindings; Variables: Variables }>,

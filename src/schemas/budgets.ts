@@ -1,8 +1,8 @@
-import { createSelectSchema } from 'drizzle-zod';
 import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
-import { users } from './users';
+import { createSelectSchema, createInsertSchema } from 'drizzle-zod';
+
 import { baseColumns } from './base';
-import { createInsertSchema } from 'drizzle-zod';
+import { users } from './users';
 
 export const budgets = sqliteTable(
 	'budgets',

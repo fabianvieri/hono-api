@@ -1,4 +1,8 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
+
+import { auth } from '../../core/middlewares/auth';
+
+import { ExpenseService } from './expenses.service';
 import { CreateExpenseOpenApi } from './openapi/create-expense.openapi';
 import { DeleteExpenseOpenApi } from './openapi/delete-expense.openapi';
 import { UpdateExpenseOpenApi } from './openapi/update-expense.openapi';
@@ -6,9 +10,8 @@ import {
 	UserExpensesByBudgetIdOpenApi,
 	GetExpenseByIdOpenApi,
 } from './openapi/user-expenses.openapi';
-import { ExpenseService } from './expenses.service';
-import { auth } from '../../core/middlewares/auth';
-import { Bindings, Variables } from '../../core/configs/worker';
+
+import type { Bindings, Variables } from '../../core/configs/worker';
 
 export const routes = new OpenAPIHono<{
 	Bindings: Bindings;

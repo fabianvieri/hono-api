@@ -1,4 +1,6 @@
-import { DrizzleD1Database, drizzle } from 'drizzle-orm/d1';
+import { drizzle } from 'drizzle-orm/d1';
+
+import type { DrizzleD1Database} from 'drizzle-orm/d1';
 
 export class DrizzleDB {
 	private static instance?: DrizzleD1Database<Record<string, never>>;

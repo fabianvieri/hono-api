@@ -1,4 +1,5 @@
 import { createRoute, z } from '@hono/zod-openapi';
+
 import { UserPublicSchema } from '../../../schemas/users';
 
 export const ProfileOpenAPI = createRoute({

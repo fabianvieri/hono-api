@@ -1,10 +1,14 @@
-import { DrizzleD1Database } from 'drizzle-orm/d1';
-import { users, UserSignInSchema, UserSignUpSchema } from '../../schemas/users';
 import { eq } from 'drizzle-orm';
 import { sign } from 'hono/jwt';
-import { hashPassword, verifyPassword } from './utils/password';
+
 import { AppError } from '../../core/errors/app-error';
-import { z } from '@hono/zod-openapi';
+import { users } from '../../schemas/users';
+
+import { hashPassword, verifyPassword } from './utils/password';
+
+import type { UserSignInSchema, UserSignUpSchema } from '../../schemas/users';
+import type { z } from '@hono/zod-openapi';
+import type { DrizzleD1Database } from 'drizzle-orm/d1';
 
 export class UserService {
 	private static instance: UserService;

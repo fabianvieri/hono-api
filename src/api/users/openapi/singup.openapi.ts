@@ -1,4 +1,5 @@
 import { createRoute, z } from '@hono/zod-openapi';
+
 import { UserSignUpSchema } from '../../../schemas/users';
 
 export const SignupOpenAPI = createRoute({
