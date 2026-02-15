@@ -33,10 +33,11 @@ routes.openapi(SigninOpenApi, async (c) => {
 	const service = c.get('userService');
 	const body = c.req.valid('json');
 	const { token, exp } = await service.signIn(body);
+	const isHttps = new URL(c.req.url).protocol === 'https:';
 	setCookie(c, 'auth_token', token, {
 		httpOnly: true,
-		secure: true,
-		sameSite: 'None',
+		secure: isHttps,
+		sameSite: isHttps ? 'None' : 'Lax',
 		path: '/',
 		maxAge: Number(c.env.JWT_TTL_SECONDS),
 	});
@@ -59,4 +60,5 @@ routes.openapi(ProfileOpenAPI, async (c) => {
 });
 
 export { routes as UserRoutes };
+
 

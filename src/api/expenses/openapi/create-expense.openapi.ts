@@ -6,7 +6,7 @@ export const CreateExpenseOpenApi = createRoute({
 	method: 'post',
 	tags: ['Expenses'],
 	summary: 'Create expense',
-	security: [{ Bearer: [] }],
+	security: [{ CookieAuth: [] }],
 	path: '/',
 	request: {
 		body: {
@@ -89,3 +89,5 @@ export const CreateExpenseOpenApi = createRoute({
 		},
 	},
 });
+
+

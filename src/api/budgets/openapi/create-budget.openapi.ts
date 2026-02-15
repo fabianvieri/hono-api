@@ -6,7 +6,7 @@ export const CreateBudgetOpenApi = createRoute({
 	method: 'post',
 	tags: ['Budgets'],
 	summary: 'Create budget',
-	security: [{ Bearer: [] }],
+	security: [{ CookieAuth: [] }],
 	path: '/',
 	request: {
 		body: {
@@ -73,3 +73,5 @@ export const CreateBudgetOpenApi = createRoute({
 		},
 	},
 });
+
+

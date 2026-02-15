@@ -6,8 +6,8 @@ export const DeleteBudgetOpenApi = createRoute({
 	method: 'delete',
 	tags: ['Budgets'],
 	summary: 'Delete budget',
-	security: [{ Bearer: [] }],
-	path: '/:id',
+	security: [{ CookieAuth: [] }],
+	path: '/{id}',
 	request: {
 		params: z.object({
 			id: z.string().openapi({
@@ -91,4 +91,5 @@ export const DeleteBudgetOpenApi = createRoute({
 		},
 	},
 });
+
 

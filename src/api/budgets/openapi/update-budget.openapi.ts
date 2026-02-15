@@ -9,8 +9,8 @@ export const UpdateBudgetOpenApi = createRoute({
 	method: 'patch',
 	tags: ['Budgets'],
 	summary: 'Update budget',
-	security: [{ Bearer: [] }],
-	path: '/:id',
+	security: [{ CookieAuth: [] }],
+	path: '/{id}',
 	request: {
 		params: z.object({
 			id: z.string().openapi({
@@ -99,4 +99,5 @@ export const UpdateBudgetOpenApi = createRoute({
 		},
 	},
 });
+
 

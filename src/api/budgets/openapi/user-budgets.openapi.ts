@@ -6,7 +6,7 @@ export const UserBudgetsOpenApi = createRoute({
 	method: 'get',
 	tags: ['Budgets'],
 	summary: 'Get user budgets',
-	security: [{ Bearer: [] }],
+	security: [{ CookieAuth: [] }],
 	path: '/',
 	responses: {
 		200: {
@@ -54,4 +54,6 @@ export const UserBudgetsOpenApi = createRoute({
 		},
 	},
 });
+
+
 

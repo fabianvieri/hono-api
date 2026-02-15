@@ -6,13 +6,13 @@ export const DeleteExpenseOpenApi = createRoute({
 	method: 'delete',
 	tags: ['Expenses'],
 	summary: 'Delete expense',
-	security: [{ Bearer: [] }],
-	path: '/:expenseId',
+	security: [{ CookieAuth: [] }],
+	path: '/{id}',
 	request: {
 		params: z.object({
-			expenseId: z.string().openapi({
+			id: z.string().openapi({
 				param: {
-					name: 'expenseId',
+					name: 'id',
 					in: 'path',
 				},
 				example: 'some-random-id',

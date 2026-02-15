@@ -6,13 +6,13 @@ export const UpdateExpenseOpenApi = createRoute({
 	method: 'patch',
 	tags: ['Expenses'],
 	summary: 'Update expense',
-	security: [{ Bearer: [] }],
-	path: '/:expenseId',
+	security: [{ CookieAuth: [] }],
+	path: '/{id}',
 	request: {
 		params: z.object({
-			expenseId: z.string().openapi({
+			id: z.string().openapi({
 				param: {
-					name: 'expenseId',
+					name: 'id',
 					in: 'path',
 				},
 				example: 'some-random-id',
@@ -75,9 +75,9 @@ export const UpdateExpenseOpenApi = createRoute({
 					schema: z.object({
 						ok: z.literal(false),
 						data: z.null(),
-						message: z
-							.string()
-							.openapi({ examples: ['Expense not found or does not belong to the user'] }),
+						message: z.string().openapi({
+							examples: ['Expense not found or does not belong to the user'],
+						}),
 					}),
 				},
 			},
@@ -96,4 +96,3 @@ export const UpdateExpenseOpenApi = createRoute({
 		},
 	},
 });
-

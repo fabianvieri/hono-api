@@ -14,10 +14,10 @@ import type { Bindings, Variables } from '@core/configs/worker';
 
 const app = new OpenAPIHono<{ Bindings: Bindings; Variables: Variables }>();
 
-app.openAPIRegistry.registerComponent('securitySchemes', 'Bearer', {
-	type: 'http',
-	scheme: 'bearer',
-	bearerFormat: 'JWT',
+app.openAPIRegistry.registerComponent('securitySchemes', 'CookieAuth', {
+	type: 'apiKey',
+	in: 'cookie',
+	name: 'auth_token',
 });
 
 app.doc31('/openapi', {
@@ -39,7 +39,7 @@ app.onError((error, c) => {
 });
 
 app.get('/', (c) => c.text(`Welcome to this server`));
-app.get('/swagger', swaggerUI({ url: '/openapi' }));
+app.get('/swagger', swaggerUI({ url: '/openapi', withCredentials: true }));
 
 app.use(
 	cors({

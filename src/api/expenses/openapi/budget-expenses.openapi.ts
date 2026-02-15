@@ -5,9 +5,9 @@ import { ExpenseSelectSchema } from '@schemas/expenses';
 export const BudgetExpensesOpenApi = createRoute({
 	method: 'get',
 	tags: ['Expenses'],
-	summary: 'Get expenses by budget ID',
-	security: [{ Bearer: [] }],
-	path: '/:budgetId/expenses',
+	summary: 'Get expenses by budget id',
+	security: [{ CookieAuth: [] }],
+	path: '/{budgetId}/expenses',
 	request: {
 		params: z.object({
 			budgetId: z.string().openapi({

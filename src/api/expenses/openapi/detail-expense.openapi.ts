@@ -5,14 +5,14 @@ import { ExpenseSelectSchema } from '@schemas/expenses';
 export const DetailExpenseOpenApi = createRoute({
 	method: 'get',
 	tags: ['Expenses'],
-	summary: 'Get expense by ID',
-	security: [{ Bearer: [] }],
-	path: '/:expenseId',
+	summary: 'Get expense by id',
+	security: [{ CookieAuth: [] }],
+	path: '/{id}',
 	request: {
 		params: z.object({
-			expenseId: z.string().openapi({
+			id: z.string().openapi({
 				param: {
-					name: 'expenseId',
+					name: 'id',
 					in: 'path',
 				},
 				example: 'some-random-id',

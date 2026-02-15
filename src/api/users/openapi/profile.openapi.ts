@@ -6,7 +6,7 @@ export const ProfileOpenAPI = createRoute({
 	method: 'get',
 	tags: ['Users'],
 	summary: 'Profile',
-	security: [{ Bearer: [] }],
+	security: [{ CookieAuth: [] }],
 	path: '/profile',
 	responses: {
 		200: {
@@ -63,4 +63,6 @@ export const ProfileOpenAPI = createRoute({
 		},
 	},
 });
+
+
 

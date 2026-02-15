@@ -35,8 +35,8 @@ routes.openapi(CreateExpenseOpenApi, async (c) => {
 routes.openapi(DetailExpenseOpenApi, async (c) => {
 	const expenseService = c.get('expenseService');
 	const userId = c.var.jwtPayload.id;
-	const { expenseId } = c.req.valid('param');
-	const expense = await expenseService.getExpenseById(expenseId, userId);
+	const { id } = c.req.valid('param');
+	const expense = await expenseService.getExpenseById(id, userId);
 	return c.json({ ok: true, data: expense, message: null }, 200);
 });
 
@@ -44,11 +44,11 @@ routes.openapi(DetailExpenseOpenApi, async (c) => {
 routes.openapi(UpdateExpenseOpenApi, async (c) => {
 	const expenseService = c.get('expenseService');
 	const userId = c.var.jwtPayload.id;
-	const { expenseId } = c.req.valid('param');
+	const { id } = c.req.valid('param');
 	const expense = c.req.valid('json');
 	const updatedExpense = await expenseService.updateExpense(
 		expense,
-		expenseId,
+		id,
 		userId,
 	);
 	return c.json({ ok: true, data: updatedExpense, message: null }, 200);
@@ -58,8 +58,8 @@ routes.openapi(UpdateExpenseOpenApi, async (c) => {
 routes.openapi(DeleteExpenseOpenApi, async (c) => {
 	const expenseService = c.get('expenseService');
 	const userId = c.var.jwtPayload.id;
-	const { expenseId } = c.req.valid('param');
-	const deletedExpense = await expenseService.deleteExpense(expenseId, userId);
+	const { id } = c.req.valid('param');
+	const deletedExpense = await expenseService.deleteExpense(id, userId);
 	return c.json({ ok: true, data: deletedExpense, message: null }, 200);
 });
 
