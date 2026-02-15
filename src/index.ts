@@ -8,7 +8,9 @@ import { BudgetRoutes } from '@api/budgets/budgets.route';
 import { ExpenseRoutes } from '@api/expenses/expenses.route';
 import { UserRoutes } from '@api/users/users.route';
 import { DrizzleDB } from '@core/db/drizzle';
+import { RedisUpstash } from '@core/db/redis';
 import { AppError } from '@core/errors/app-error';
+import { limiter } from '@core/middlewares/limiter';
 
 import type { Bindings, Variables } from '@core/configs/worker';
 
@@ -18,6 +20,17 @@ app.openAPIRegistry.registerComponent('securitySchemes', 'CookieAuth', {
 	type: 'apiKey',
 	in: 'cookie',
 	name: 'auth_token',
+});
+
+app.use(async (c, next) => {
+	c.set(
+		'redis',
+		RedisUpstash.getInstance(
+			c.env.UPSTASH_REDIS_REST_URL,
+			c.env.UPSTASH_REDIS_REST_TOKEN,
+		),
+	);
+	await next();
 });
 
 app.doc31('/openapi', {
@@ -51,8 +64,13 @@ app.use(
 app.use(secureHeaders());
 app.use(logger());
 
-app.use(async (ctx, next) => {
-	ctx.set('db', DrizzleDB.getInstance(ctx.env.DB));
+app.use('/api/*', async (c, next) => {
+	const applyLimiter = limiter(c.var.redis);
+	return applyLimiter(c, next);
+});
+
+app.use(async (c, next) => {
+	c.set('db', DrizzleDB.getInstance(c.env.DB));
 	await next();
 });
 
@@ -61,4 +79,3 @@ app.route('/api/budgets', BudgetRoutes);
 app.route('/api/expenses', ExpenseRoutes);
 
 export default app;
-

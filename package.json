@@ -13,14 +13,18 @@
 		"db:push:remote": "wrangler d1 migrations apply hono-api-db --remote"
 	},
 	"dependencies": {
+		"@hono-rate-limiter/redis": "^0.1.4",
 		"@hono/swagger-ui": "^0.5.3",
 		"@hono/zod-openapi": "^1.2.1",
 		"@libsql/client": "^0.17.0",
 		"@noble/hashes": "^1.8.0",
 		"@paralleldrive/cuid2": "^3.3.0",
+		"@upstash/ratelimit": "^2.0.8",
+		"@upstash/redis": "^1.36.2",
 		"drizzle-orm": "^0.45.1",
 		"drizzle-zod": "^0.8.3",
-		"hono": "^4.11.7"
+		"hono": "^4.11.7",
+		"hono-rate-limiter": "^0.5.3"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20260203.0",
