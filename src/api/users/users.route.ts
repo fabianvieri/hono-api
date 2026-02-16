@@ -1,28 +1,27 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { setCookie } from 'hono/cookie';
 
-
 import { ProfileOpenAPI } from '@api/users/openapi/profile.openapi';
 import { SigninOpenApi } from '@api/users/openapi/signin.openapi';
 import { SignupOpenAPI } from '@api/users/openapi/singup.openapi';
 import { UserService } from '@api/users/users.service';
 import { auth } from '@core/middlewares/auth';
 
-import type { Bindings, Variables } from '@core/configs/worker';
+import type { Variables } from '@core/configs/worker';
 
 const routes = new OpenAPIHono<{
-	Bindings: Bindings;
+	Bindings: CloudflareBindings;
 	Variables: Variables & { userService: UserService };
 }>();
 
 routes.use(async (c, next) => {
-	const ttlSeconds = Number(c.env.JWT_TTL_SECONDS);
+	const ttlSeconds = Number(c.env.BETTER_AUTH_SESSION_TTL_SECONDS);
 	if (!Number.isFinite(ttlSeconds) || ttlSeconds <= 0) {
-		throw new Error('Invalid JWT_TTL_SECONDS');
+		throw new Error('Invalid BETTER_AUTH_SESSION_TTL_SECONDS');
 	}
 	const userService = UserService.getInstance(
 		c.var.db,
-		c.env.JWT_SECRET,
+		c.env.BETTER_AUTH_SECRET,
 		ttlSeconds,
 	);
 	c.set('userService', userService);
@@ -39,7 +38,7 @@ routes.openapi(SigninOpenApi, async (c) => {
 		secure: isHttps,
 		sameSite: isHttps ? 'None' : 'Lax',
 		path: '/',
-		maxAge: Number(c.env.JWT_TTL_SECONDS),
+		maxAge: Number(c.env.BETTER_AUTH_SESSION_TTL_SECONDS),
 	});
 	return c.json({ ok: true, data: { exp }, message: null }, 200);
 });
@@ -60,5 +59,3 @@ routes.openapi(ProfileOpenAPI, async (c) => {
 });
 
 export { routes as UserRoutes };
-
-

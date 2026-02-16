@@ -7,14 +7,15 @@ import { secureHeaders } from 'hono/secure-headers';
 import { BudgetRoutes } from '@api/budgets/budgets.route';
 import { ExpenseRoutes } from '@api/expenses/expenses.route';
 import { UserRoutes } from '@api/users/users.route';
+import { createBetterAuth } from '@core/auth/better-auth';
 import { DrizzleDB } from '@core/db/drizzle';
 import { RedisUpstash } from '@core/db/redis';
 import { AppError } from '@core/errors/app-error';
 import { limiter } from '@core/middlewares/limiter';
 
-import type { Bindings, Variables } from '@core/configs/worker';
+import type { Variables } from '@core/configs/worker';
 
-type AppEnv = { Bindings: Bindings; Variables: Variables };
+type AppEnv = { Bindings: CloudflareBindings; Variables: Variables };
 type App = OpenAPIHono<AppEnv>;
 
 const registerOpenAPI = (app: App) => {
@@ -83,6 +84,10 @@ const registerMiddlewares = (app: App) => {
 
 const registerRoutes = (app: App) => {
 	app.get('/', (c) => c.text('Welcome to this server'));
+	app.on(['GET', 'POST'], '/api/auth/*', async (c) => {
+		const auth = createBetterAuth(c.var.db, c.env);
+		return auth.handler(c.req.raw);
+	});
 	app.route('/api/users', UserRoutes);
 	app.route('/api/budgets', BudgetRoutes);
 	app.route('/api/expenses', ExpenseRoutes);

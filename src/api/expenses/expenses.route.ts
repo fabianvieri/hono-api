@@ -7,10 +7,10 @@ import { DetailExpenseOpenApi } from '@api/expenses/openapi/detail-expense.opena
 import { UpdateExpenseOpenApi } from '@api/expenses/openapi/update-expense.openapi';
 import { auth } from '@core/middlewares/auth';
 
-import type { Bindings, Variables } from '@core/configs/worker';
+import type { Variables } from '@core/configs/worker';
 
 export const routes = new OpenAPIHono<{
-	Bindings: Bindings;
+	Bindings: CloudflareBindings;
 	Variables: Variables & { expenseService: ExpenseService };
 }>();
 

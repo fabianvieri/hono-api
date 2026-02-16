@@ -122,6 +122,14 @@ export class ExpenseService {
 			.returning()
 			.get();
 
+		if (!output) {
+			throw new AppError(
+				404,
+				'EXPENSE_NOT_FOUND',
+				'Expense not found or does not belong to the user',
+			);
+		}
+
 		return output;
 	}
 

@@ -1,11 +1,11 @@
 import { RedisStore } from '@hono-rate-limiter/redis';
 import { rateLimiter } from 'hono-rate-limiter';
 
-import type { Bindings, Variables } from '@core/configs/worker';
+import type { Variables } from '@core/configs/worker';
 import type { Redis } from '@upstash/redis';
 
 export const limiter = (redis: Redis) =>
-	rateLimiter<{ Bindings: Bindings; Variables: Variables }>({
+	rateLimiter<{ Bindings: CloudflareBindings; Variables: Variables }>({
 		windowMs: 15 * 60 * 1000,
 		limit: 100,
 		standardHeaders: 'draft-6',

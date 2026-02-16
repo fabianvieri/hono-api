@@ -9,10 +9,10 @@ import { ExpenseService } from '@api/expenses/expenses.service';
 import { BudgetExpensesOpenApi } from '@api/expenses/openapi/budget-expenses.openapi';
 import { auth } from '@core/middlewares/auth';
 
-import type { Bindings, Variables } from '@core/configs/worker';
+import type { Variables } from '@core/configs/worker';
 
 const routes = new OpenAPIHono<{
-	Bindings: Bindings;
+	Bindings: CloudflareBindings;
 	Variables: Variables & {
 		budgetService: BudgetService;
 		expenseService: ExpenseService;

@@ -6,7 +6,7 @@ import type { Bindings, Variables } from '@core/configs/worker';
 import type { Context, Next } from 'hono';
 
 export const auth = async (
-	ctx: Context<{ Bindings: Bindings; Variables: Variables }>,
+	ctx: Context<{ Bindings: CloudflareBindings; Variables: Variables }>,
 	next: Next,
 ) => {
 	const cookieToken = getCookie(ctx, 'auth_token');
@@ -17,7 +17,7 @@ export const auth = async (
 	}
 
 	try {
-		await verify(token, ctx.env.JWT_SECRET, 'HS256');
+		await verify(token, ctx.env.BETTER_AUTH_SECRET, 'HS256');
 	} catch {
 		ctx.header('WWW-Authenticate', 'Bearer');
 		return ctx.json({ ok: false, data: null, message: 'Unauthorized' }, 401);
@@ -44,4 +44,3 @@ export const auth = async (
 
 	await next();
 };
-
