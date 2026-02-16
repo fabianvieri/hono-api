@@ -6,7 +6,7 @@ import { secureHeaders } from 'hono/secure-headers';
 
 import { BudgetRoutes } from '@api/budgets/budgets.route';
 import { ExpenseRoutes } from '@api/expenses/expenses.route';
-import { createBetterAuth } from '@core/auth/better-auth';
+import { createBetterAuth, parseTrustedOrigins } from '@core/auth/better-auth';
 import { DrizzleDB } from '@core/db/drizzle';
 import { RedisUpstash } from '@core/db/redis';
 import { AppError } from '@core/errors/app-error';
@@ -62,7 +62,14 @@ const registerMiddlewares = (app: App) => {
 
 	app.use(
 		cors({
-			origin: '*',
+			origin: (requestOrigin, c) => {
+				const allowedOrigins = parseTrustedOrigins(
+					c.env.BETTER_AUTH_TRUSTED_ORIGINS,
+				);
+
+				if (!requestOrigin) return allowedOrigins[0] ?? '';
+				return allowedOrigins.includes(requestOrigin) ? requestOrigin : '';
+			},
 			credentials: true,
 		}),
 	);
