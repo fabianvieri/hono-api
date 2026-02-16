@@ -28,7 +28,7 @@
 		"hono-rate-limiter": "^0.5.3"
 	},
 	"devDependencies": {
-		"@cloudflare/workers-types": "^4.20260203.0",
+		"@cloudflare/workers-types": "^4.20260214.0",
 		"@eslint/js": "^9.39.2",
 		"@types/node": "^25.2.3",
 		"drizzle-kit": "^0.31.8",
@@ -38,6 +38,6 @@
 		"eslint-plugin-import": "^2.32.0",
 		"globals": "^17.3.0",
 		"typescript-eslint": "^8.55.0",
-		"wrangler": "^4.4.0"
+		"wrangler": "^4.65.0"
 	}
 }

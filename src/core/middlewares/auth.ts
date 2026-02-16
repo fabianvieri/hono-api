@@ -1,46 +1,23 @@
-import { z } from '@hono/zod-openapi';
-import { getCookie } from 'hono/cookie';
-import { decode, verify } from 'hono/jwt';
+import { createBetterAuth } from '@core/auth/better-auth';
 
-import type { Bindings, Variables } from '@core/configs/worker';
+import type { Variables } from '@core/configs/worker';
 import type { Context, Next } from 'hono';
 
 export const auth = async (
 	ctx: Context<{ Bindings: CloudflareBindings; Variables: Variables }>,
 	next: Next,
 ) => {
-	const cookieToken = getCookie(ctx, 'auth_token');
-	const token = cookieToken;
-
-	if (!token) {
-		return ctx.json({ ok: false, data: null, message: 'Unauthorized' }, 401);
-	}
-
-	try {
-		await verify(token, ctx.env.BETTER_AUTH_SECRET, 'HS256');
-	} catch {
-		ctx.header('WWW-Authenticate', 'Bearer');
-		return ctx.json({ ok: false, data: null, message: 'Unauthorized' }, 401);
-	}
-
-	const { payload } = decode(token);
-	const payloadSchema = z.object({
-		id: z.string(),
-		iat: z.number(),
-		exp: z.number(),
+	const betterAuth = createBetterAuth(ctx.var.db, ctx.env);
+	const session = await betterAuth.api.getSession({
+		headers: ctx.req.raw.headers,
 	});
-
-	const parsedPayload = payloadSchema.safeParse(payload);
-	if (!parsedPayload.success) {
+	if (!session) {
 		return ctx.json({ ok: false, data: null, message: 'Unauthorized' }, 401);
 	}
 
-	const now = Math.floor(Date.now() / 1000);
-	if (parsedPayload.data.exp <= now) {
-		return ctx.json({ ok: false, data: null, message: 'Unauthorized' }, 401);
-	}
-
-	ctx.set('jwtPayload', parsedPayload.data);
+	ctx.set('authUser', {
+		id: session.user.id,
+	});
 
 	await next();
 };

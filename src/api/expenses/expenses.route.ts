@@ -11,7 +11,10 @@ import type { Variables } from '@core/configs/worker';
 
 export const routes = new OpenAPIHono<{
 	Bindings: CloudflareBindings;
-	Variables: Variables & { expenseService: ExpenseService };
+	Variables: Variables & {
+		authUser: { id: string };
+		expenseService: ExpenseService;
+	};
 }>();
 
 routes.use(async (c, next) => {
@@ -25,7 +28,7 @@ routes.use('*', auth);
 // create expense
 routes.openapi(CreateExpenseOpenApi, async (c) => {
 	const expenseService = c.get('expenseService');
-	const userId = c.var.jwtPayload.id;
+	const userId = c.var.authUser.id;
 	const expense = c.req.valid('json');
 	const newExpense = await expenseService.createExpense(expense, userId);
 	return c.json({ ok: true, data: newExpense, message: null }, 201);
@@ -34,7 +37,7 @@ routes.openapi(CreateExpenseOpenApi, async (c) => {
 // get expense detail
 routes.openapi(DetailExpenseOpenApi, async (c) => {
 	const expenseService = c.get('expenseService');
-	const userId = c.var.jwtPayload.id;
+	const userId = c.var.authUser.id;
 	const { id } = c.req.valid('param');
 	const expense = await expenseService.getExpenseById(id, userId);
 	return c.json({ ok: true, data: expense, message: null }, 200);
@@ -43,7 +46,7 @@ routes.openapi(DetailExpenseOpenApi, async (c) => {
 // update expense
 routes.openapi(UpdateExpenseOpenApi, async (c) => {
 	const expenseService = c.get('expenseService');
-	const userId = c.var.jwtPayload.id;
+	const userId = c.var.authUser.id;
 	const { id } = c.req.valid('param');
 	const expense = c.req.valid('json');
 	const updatedExpense = await expenseService.updateExpense(
@@ -57,7 +60,7 @@ routes.openapi(UpdateExpenseOpenApi, async (c) => {
 // delete expense
 routes.openapi(DeleteExpenseOpenApi, async (c) => {
 	const expenseService = c.get('expenseService');
-	const userId = c.var.jwtPayload.id;
+	const userId = c.var.authUser.id;
 	const { id } = c.req.valid('param');
 	const deletedExpense = await expenseService.deleteExpense(id, userId);
 	return c.json({ ok: true, data: deletedExpense, message: null }, 200);

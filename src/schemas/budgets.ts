@@ -1,8 +1,8 @@
 import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
 import { createSelectSchema, createInsertSchema } from 'drizzle-zod';
 
+import { user } from '@schemas/auth';
 import { baseColumns } from '@schemas/base';
-import { users } from '@schemas/users';
 
 export const budgets = sqliteTable(
 	'budgets',
@@ -12,7 +12,7 @@ export const budgets = sqliteTable(
 		amount: integer('amount').notNull(),
 		userId: text('user_id')
 			.notNull()
-			.references(() => users.id, { onDelete: 'cascade' }),
+			.references(() => user.id, { onDelete: 'cascade' }),
 	},
 	(table) => [index('user_id_idx').on(table.userId)],
 );

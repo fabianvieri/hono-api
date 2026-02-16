@@ -6,7 +6,6 @@ import { secureHeaders } from 'hono/secure-headers';
 
 import { BudgetRoutes } from '@api/budgets/budgets.route';
 import { ExpenseRoutes } from '@api/expenses/expenses.route';
-import { UserRoutes } from '@api/users/users.route';
 import { createBetterAuth } from '@core/auth/better-auth';
 import { DrizzleDB } from '@core/db/drizzle';
 import { RedisUpstash } from '@core/db/redis';
@@ -22,7 +21,7 @@ const registerOpenAPI = (app: App) => {
 	app.openAPIRegistry.registerComponent('securitySchemes', 'CookieAuth', {
 		type: 'apiKey',
 		in: 'cookie',
-		name: 'auth_token',
+		name: 'better-auth.session_token',
 	});
 
 	app.doc31('/openapi', {
@@ -88,7 +87,6 @@ const registerRoutes = (app: App) => {
 		const auth = createBetterAuth(c.var.db, c.env);
 		return auth.handler(c.req.raw);
 	});
-	app.route('/api/users', UserRoutes);
 	app.route('/api/budgets', BudgetRoutes);
 	app.route('/api/expenses', ExpenseRoutes);
 };
