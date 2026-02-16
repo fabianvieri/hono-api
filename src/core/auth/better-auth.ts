@@ -1,6 +1,13 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 
+import {
+	account,
+	session,
+	user,
+	verification,
+} from '@schemas/auth';
+
 import type { DrizzleD1Database } from 'drizzle-orm/d1';
 
 const parseTrustedOrigins = (origins?: string) => {
@@ -33,7 +40,13 @@ export const createBetterAuth = (
 		trustedOrigins: parseTrustedOrigins(env.BETTER_AUTH_TRUSTED_ORIGINS),
 		database: drizzleAdapter(db, {
 			provider: 'sqlite',
-			usePlural: true,
+			usePlural: false,
+			schema: {
+				user,
+				session,
+				account,
+				verification,
+			},
 		}),
 		socialProviders,
 	});
