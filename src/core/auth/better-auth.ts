@@ -44,5 +44,12 @@ export const createBetterAuth = (
 			},
 		}),
 		socialProviders,
+		advanced: {
+			defaultCookieAttributes: {
+				httpOnly: true,
+				secure: env.NODE_ENV === 'production',
+				sameSite: env.NODE_ENV === 'production' ? 'None' : 'Lax',
+			},
+		},
 	});
 };
